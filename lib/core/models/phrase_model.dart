@@ -1,3 +1,5 @@
+// lib/core/models/phrase_model.dart
+
 import '../../domain/entities/phrase_entity.dart';
 
 class Phrase {
@@ -79,13 +81,14 @@ class ContextExample {
   final String context;
   final String englishExample;
   final String spanishExample;
+  final String pronunciation; // ← CAMBIO: Ahora es un campo final normal
 
   ContextExample({
     required this.emoji,
     required this.context,
     required this.englishExample,
     required this.spanishExample,
-    required String pronunciation,
+    required this.pronunciation, // ← CAMBIO: Ya no pone String antes
   });
 
   // Convertir de Model a Entity
@@ -95,7 +98,7 @@ class ContextExample {
       context: context,
       englishExample: englishExample,
       spanishExample: spanishExample,
-      pronunciation: '',
+      pronunciation: pronunciation, // ← CAMBIO: Usa el campo real
     );
   }
 
@@ -106,7 +109,8 @@ class ContextExample {
       context: entity.context,
       englishExample: entity.englishExample,
       spanishExample: entity.spanishExample,
-      pronunciation: '',
+      pronunciation:
+          entity.pronunciation, // ← CAMBIO: Usa el campo de la entity
     );
   }
 
@@ -115,13 +119,14 @@ class ContextExample {
     'context': context,
     'englishExample': englishExample,
     'spanishExample': spanishExample,
+    'pronunciation': pronunciation, // ← CAMBIO: Incluido en toJson
   };
 
   factory ContextExample.fromJson(Map<String, dynamic> json) => ContextExample(
-    emoji: json['emoji'],
-    context: json['context'],
-    englishExample: json['englishExample'],
-    spanishExample: json['spanishExample'],
-    pronunciation: '',
+    emoji: json['emoji'] ?? '',
+    context: json['context'] ?? '',
+    englishExample: json['englishExample'] ?? '',
+    spanishExample: json['spanishExample'] ?? '',
+    pronunciation: json['pronunciation'] ?? '', // ← CAMBIO: Lee del json
   );
 }

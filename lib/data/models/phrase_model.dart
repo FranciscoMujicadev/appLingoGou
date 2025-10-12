@@ -1,3 +1,5 @@
+// lib/data/models/phrase_model.dart
+
 class Phrase {
   final String id;
   final String idiom;
@@ -51,12 +53,14 @@ class ContextExample {
   final String context;
   final String englishExample;
   final String spanishExample;
+  final String pronunciation; // ← Campo agregado como final
 
   ContextExample({
     required this.emoji,
     required this.context,
     required this.englishExample,
     required this.spanishExample,
+    required this.pronunciation, // ← Ahora es un campo normal
   });
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +68,7 @@ class ContextExample {
     'context': context,
     'englishExample': englishExample,
     'spanishExample': spanishExample,
+    'pronunciation': pronunciation, // ← Incluido en toJson
   };
 
   factory ContextExample.fromJson(Map<String, dynamic> json) => ContextExample(
@@ -71,5 +76,6 @@ class ContextExample {
     context: json['context'] ?? '',
     englishExample: json['englishExample'] ?? '',
     spanishExample: json['spanishExample'] ?? '',
+    pronunciation: json['pronunciation'] ?? '', // ← Incluido en fromJson
   );
 }

@@ -1,3 +1,5 @@
+// lib/core/injection_container.dart
+
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +22,7 @@ import '../domain/repositories/gif_repository.dart';
 import '../domain/usecases/get_categories_usecase.dart';
 import '../domain/usecases/get_phrases_by_category_usecase.dart';
 import '../domain/usecases/manage_favorites_usecase.dart';
+import '../domain/usecases/context_favorites_usecases.dart';
 import '../domain/usecases/stats_usecases.dart';
 import '../domain/usecases/get_gif_usecase.dart';
 
@@ -62,15 +65,24 @@ Future<void> init() async {
   );
 
   // ============ Use Cases ============
+
   // Phrases
   sl.registerLazySingleton(() => GetCategoriesUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetPhrasesByCategoryUseCase(repository: sl()));
 
-  // Favorites
+  // Favorites - Frases
   sl.registerLazySingleton(() => AddFavoriteUseCase(repository: sl()));
   sl.registerLazySingleton(() => RemoveFavoriteUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetFavoritesUseCase(repository: sl()));
   sl.registerLazySingleton(() => IsFavoriteUseCase(repository: sl()));
+
+  // Favorites - Contextos
+  sl.registerLazySingleton(() => AddFavoriteContextUseCase(repository: sl()));
+  sl.registerLazySingleton(
+    () => RemoveFavoriteContextUseCase(repository: sl()),
+  );
+  sl.registerLazySingleton(() => GetFavoriteContextsUseCase(repository: sl()));
+  sl.registerLazySingleton(() => IsFavoriteContextUseCase(repository: sl()));
 
   // Stats
   sl.registerLazySingleton(
@@ -93,7 +105,7 @@ Future<void> init() async {
       addExploredCategoryUseCase: sl(),
       incrementPhrasesViewedUseCase: sl(),
       getGifUseCase: sl(),
-      repository: sl(), // <-- AGREGAR ESTA LÍNEA
+      repository: sl(),
     ),
   );
 
@@ -103,13 +115,12 @@ Future<void> init() async {
       removeFavoriteUseCase: sl(),
       getFavoritesUseCase: sl(),
       isFavoriteUseCase: sl(),
+      addFavoriteContextUseCase: sl(),
+      removeFavoriteContextUseCase: sl(),
+      getFavoriteContextsUseCase: sl(),
+      isFavoriteContextUseCase: sl(),
     ),
   );
 
-  sl.registerFactory(
-    () => StatsProvider(
-      //  getStatsUseCase: sl(),
-      //  incrementShareAttemptsUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => StatsProvider());
 }

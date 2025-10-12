@@ -1,4 +1,7 @@
+// lib/data/repositories/favorites_repository_impl.dart
+
 import '../../domain/entities/phrase_entity.dart';
+import '../../domain/entities/favorite_context_entity.dart';
 import '../../domain/repositories/favorites_repository.dart';
 import '../datasources/local_storage_datasource.dart';
 import '../../core/models/phrase_model.dart';
@@ -6,8 +9,11 @@ import '../../core/models/phrase_model.dart';
 class FavoritesRepositoryImpl implements FavoritesRepository {
   final LocalStorageDataSource localDataSource;
   List<PhraseEntity> _cachedFavorites = [];
+  List<FavoriteContextEntity> _cachedFavoriteContexts = [];
 
   FavoritesRepositoryImpl({required this.localDataSource});
+
+  // ========== MÉTODOS PARA FRASES ==========
 
   @override
   Future<void> addFavorite(PhraseEntity phrase) async {
@@ -51,5 +57,47 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
         .map((entity) => Phrase.fromEntity(entity))
         .toList();
     await localDataSource.saveFavorites(models);
+  }
+
+  // ========== MÉTODOS PARA CONTEXTOS ==========
+
+  @override
+  Future<void> addFavoriteContext(FavoriteContextEntity context) async {
+    if (!_cachedFavoriteContexts.any((c) => c.id == context.id)) {
+      _cachedFavoriteContexts.add(context);
+      await _saveFavoriteContexts();
+    }
+  }
+
+  @override
+  Future<void> removeFavoriteContext(String contextId) async {
+    _cachedFavoriteContexts.removeWhere((c) => c.id == contextId);
+    await _saveFavoriteContexts();
+  }
+
+  @override
+  Future<List<FavoriteContextEntity>> getFavoriteContexts() async {
+    if (_cachedFavoriteContexts.isEmpty) {
+      _cachedFavoriteContexts = await localDataSource.loadFavoriteContexts();
+    }
+    return _cachedFavoriteContexts;
+  }
+
+  @override
+  Future<bool> isFavoriteContext(String contextId) async {
+    if (_cachedFavoriteContexts.isEmpty) {
+      await getFavoriteContexts();
+    }
+    return _cachedFavoriteContexts.any((c) => c.id == contextId);
+  }
+
+  @override
+  Future<void> clearAllFavoriteContexts() async {
+    _cachedFavoriteContexts.clear();
+    await localDataSource.saveFavoriteContexts([]);
+  }
+
+  Future<void> _saveFavoriteContexts() async {
+    await localDataSource.saveFavoriteContexts(_cachedFavoriteContexts);
   }
 }

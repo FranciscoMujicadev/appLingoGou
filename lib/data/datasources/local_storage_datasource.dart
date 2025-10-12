@@ -1,6 +1,9 @@
+// lib/data/datasources/local_storage_datasource.dart
+
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/models/phrase_model.dart';
+import '../../domain/entities/favorite_context_entity.dart';
 import '../models/user_stats_model.dart';
 
 abstract class LocalStorageDataSource {
@@ -9,6 +12,10 @@ abstract class LocalStorageDataSource {
   Future<void> saveUserStats(UserStatsModel stats);
   Future<UserStatsModel> loadUserStats();
   Future<void> clearAllData();
+
+  // Métodos para contextos favoritos
+  Future<void> saveFavoriteContexts(List<FavoriteContextEntity> contexts);
+  Future<List<FavoriteContextEntity>> loadFavoriteContexts();
 }
 
 class LocalStorageDataSourceImpl implements LocalStorageDataSource {
@@ -71,9 +78,38 @@ class LocalStorageDataSourceImpl implements LocalStorageDataSource {
   @override
   Future<void> clearAllData() async {
     await sharedPreferences.remove('favorites');
+    await sharedPreferences.remove('favoriteContexts');
     await sharedPreferences.remove('phrasesViewed');
     await sharedPreferences.remove('shareAttempts');
     await sharedPreferences.remove('exploredCategories');
     await sharedPreferences.remove('viewedPhrases');
+  }
+
+  // ========== MÉTODOS PARA CONTEXTOS FAVORITOS ==========
+
+  @override
+  Future<void> saveFavoriteContexts(
+    List<FavoriteContextEntity> contexts,
+  ) async {
+    final contextsData = contexts.map((c) => c.toJson()).toList();
+    await sharedPreferences.setString(
+      'favoriteContexts',
+      jsonEncode(contextsData),
+    );
+  }
+
+  @override
+  Future<List<FavoriteContextEntity>> loadFavoriteContexts() async {
+    final contextsJson = sharedPreferences.getString('favoriteContexts');
+    if (contextsJson == null) return [];
+
+    try {
+      final List<dynamic> contextsData = jsonDecode(contextsJson);
+      return contextsData
+          .map((json) => FavoriteContextEntity.fromJson(json))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 }

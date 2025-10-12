@@ -1,3 +1,5 @@
+// lib/presentation/screens/main_navigation_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/injection_container.dart' as di;
@@ -66,7 +68,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     icon: Stack(
                       children: [
                         const Icon(Icons.favorite),
-                        if (favProvider.favoritesCount > 0)
+                        if (favProvider.totalFavoritesCount > 0)
                           Positioned(
                             right: 0,
                             top: 0,
@@ -81,10 +83,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                                 minHeight: 16,
                               ),
                               child: Text(
-                                '${favProvider.favoritesCount}',
+                                '${favProvider.totalFavoritesCount}',
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 textAlign: TextAlign.center,
                               ),

@@ -1,6 +1,10 @@
+// lib/presentation/providers/favorites_provider.dart
+
 import 'package:flutter/material.dart';
 import '../../domain/entities/phrase_entity.dart';
+import '../../domain/entities/favorite_context_entity.dart';
 import '../../domain/usecases/manage_favorites_usecase.dart';
+import '../../domain/usecases/context_favorites_usecases.dart';
 
 class FavoritesProvider extends ChangeNotifier {
   final AddFavoriteUseCase addFavoriteUseCase;
@@ -8,25 +12,41 @@ class FavoritesProvider extends ChangeNotifier {
   final GetFavoritesUseCase getFavoritesUseCase;
   final IsFavoriteUseCase isFavoriteUseCase;
 
+  final AddFavoriteContextUseCase addFavoriteContextUseCase;
+  final RemoveFavoriteContextUseCase removeFavoriteContextUseCase;
+  final GetFavoriteContextsUseCase getFavoriteContextsUseCase;
+  final IsFavoriteContextUseCase isFavoriteContextUseCase;
+
   FavoritesProvider({
     required this.addFavoriteUseCase,
     required this.removeFavoriteUseCase,
     required this.getFavoritesUseCase,
     required this.isFavoriteUseCase,
+    required this.addFavoriteContextUseCase,
+    required this.removeFavoriteContextUseCase,
+    required this.getFavoriteContextsUseCase,
+    required this.isFavoriteContextUseCase,
   });
 
   List<PhraseEntity> _favorites = [];
+  List<FavoriteContextEntity> _favoriteContexts = [];
   bool _isLoading = false;
 
   List<PhraseEntity> get favorites => _favorites;
+  List<FavoriteContextEntity> get favoriteContexts => _favoriteContexts;
   bool get isLoading => _isLoading;
   int get favoritesCount => _favorites.length;
+  int get favoriteContextsCount => _favoriteContexts.length;
+  int get totalFavoritesCount => _favorites.length + _favoriteContexts.length;
+
+  // ========== MÉTODOS PARA FRASES ==========
 
   Future<void> loadFavorites() async {
     _isLoading = true;
     notifyListeners();
 
     _favorites = await getFavoritesUseCase();
+    _favoriteContexts = await getFavoriteContextsUseCase();
 
     _isLoading = false;
     notifyListeners();
@@ -48,5 +68,25 @@ class FavoritesProvider extends ChangeNotifier {
 
   Future<bool> isFavorite(PhraseEntity phrase) async {
     return await isFavoriteUseCase(phrase);
+  }
+
+  // ========== MÉTODOS PARA CONTEXTOS ==========
+
+  Future<void> toggleFavoriteContext(FavoriteContextEntity context) async {
+    final isFav = await isFavoriteContextUseCase(context.id);
+
+    if (isFav) {
+      await removeFavoriteContextUseCase(context.id);
+      _favoriteContexts.removeWhere((c) => c.id == context.id);
+    } else {
+      await addFavoriteContextUseCase(context);
+      _favoriteContexts.add(context);
+    }
+
+    notifyListeners();
+  }
+
+  Future<bool> isFavoriteContext(String contextId) async {
+    return await isFavoriteContextUseCase(contextId);
   }
 }
