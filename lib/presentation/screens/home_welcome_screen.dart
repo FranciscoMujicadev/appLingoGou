@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class HomeWelcomeScreen extends StatelessWidget {
   final Function(int) onNavigate;
 
-  const HomeWelcomeScreen({Key? key, required this.onNavigate})
-    : super(key: key);
+  const HomeWelcomeScreen({super.key, required this.onNavigate});
 
   @override
   Widget build(BuildContext context) {

@@ -70,19 +70,32 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
       correctEnglish: correctEnglish,
     );
 
-    // Build options: correct English sentence + 2 wrong ones from other phrases
+    // Build options: correct English sentence + 2 distinct wrong ones
+    final correctKw = _keywords(correctEnglish);
     final others = widget.allPhrases
         .where((p) => p.id != widget.phrase.id && p.contextExamples.isNotEmpty)
         .toList()
       ..shuffle(Random());
 
-    final wrongs = others
-        .take(2)
-        .map((p) => p.contextExamples[0].englishExample)
-        .toList();
+    final wrongs = <String>[];
+    for (final p in others) {
+      if (wrongs.length >= 2) break;
+      final candidate = p.contextExamples[0].englishExample;
+      final candidateKw = _keywords(candidate);
+      if (_jaccard(correctKw, candidateKw) > 0.35) continue;
+      if (wrongs.any((w) => _jaccard(_keywords(w), candidateKw) > 0.35)) continue;
+      wrongs.add(candidate);
+    }
+    // Fallback: fill remaining slots without similarity filter
+    for (final p in others) {
+      if (wrongs.length >= 2) break;
+      final candidate = p.contextExamples[0].englishExample;
+      if (candidate != correctEnglish && !wrongs.contains(candidate)) {
+        wrongs.add(candidate);
+      }
+    }
 
-    final all = [correctEnglish, ...wrongs]..shuffle(Random());
-
+    final all = [correctEnglish, ...wrongs.take(2)]..shuffle(Random());
     _options = all
         .map((s) => _QuizOption(text: s, isCorrect: s == correctEnglish))
         .toList();
@@ -90,6 +103,18 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
 
   bool get _isCorrect =>
       _selectedIndex != null && _options[_selectedIndex!].isCorrect;
+
+  Set<String> _keywords(String text) => text
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^\wáéíóúüñ\s]'), '')
+      .split(RegExp(r'\s+'))
+      .where((w) => w.length > 3)
+      .toSet();
+
+  double _jaccard(Set<String> a, Set<String> b) {
+    if (a.isEmpty && b.isEmpty) return 0;
+    return a.intersection(b).length / a.union(b).length;
+  }
 
   void _onCheck() {
     if (_selectedIndex == null) return;

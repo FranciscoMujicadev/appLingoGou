@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/onboarding_storage.dart';
 import '../../domain/usecases/stats_usecases.dart';
 
 class StatsProvider extends ChangeNotifier {
@@ -12,12 +13,14 @@ class StatsProvider extends ChangeNotifier {
 
   bool _isCollector = false;
   final bool _hasFirstStep = true;
+  bool _pendingGoalCelebration = false;
 
   int _phrasesViewed = 0;
   int _shareAttempts = 0;
   final Set<String> _exploredCategories = {};
 
   // Getters para logros
+  bool get pendingGoalCelebration => _pendingGoalCelebration;
   bool get isSharer => _shareAttempts >= 3;
   bool get isMaster => _phrasesViewed >= 50;
   bool get isCollector => _isCollector;
@@ -67,7 +70,22 @@ class StatsProvider extends ChangeNotifier {
 
   void addExploredCategory(String category) {
     _exploredCategories.add(category);
+    _checkDailyGoal();
     notifyListeners();
+  }
+
+  Future<void> _checkDailyGoal() async {
+    final newCount = await OnboardingStorage.incrementTodaySessions();
+    final goal = await OnboardingStorage.getDailyGoalSessions();
+    final alreadyCelebrated = await OnboardingStorage.hasCelebratedGoalToday();
+    if (goal > 0 && newCount >= goal && !alreadyCelebrated) {
+      _pendingGoalCelebration = true;
+      notifyListeners();
+    }
+  }
+
+  void clearPendingGoalCelebration() {
+    _pendingGoalCelebration = false;
   }
 
   Future<void> updateAchievements(int favoritesCount) async {

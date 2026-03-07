@@ -58,26 +58,48 @@ class _QuizCardState extends State<QuizCard>
 
   void _buildOptions() {
     final correct = widget.phrase.realMeaning;
+    final correctKw = _keywords(correct);
 
-    // Pick 2 wrong answers from other phrases
     final others = widget.allPhrases
         .where((p) => p.id != widget.phrase.id)
         .toList()
       ..shuffle(Random());
 
-    final wrongs = others
-        .take(2)
-        .map((p) => p.realMeaning)
+    final wrongs = <String>[];
+    for (final p in others) {
+      if (wrongs.length >= 2) break;
+      final candidate = p.realMeaning;
+      final candidateKw = _keywords(candidate);
+      // Skip if too similar to the correct answer or to already-chosen distractors
+      if (_jaccard(correctKw, candidateKw) > 0.35) continue;
+      if (wrongs.any((w) => _jaccard(_keywords(w), candidateKw) > 0.35)) continue;
+      wrongs.add(candidate);
+    }
+    // Fallback: fill remaining slots without similarity filter
+    for (final p in others) {
+      if (wrongs.length >= 2) break;
+      final candidate = p.realMeaning;
+      if (candidate != correct && !wrongs.contains(candidate)) {
+        wrongs.add(candidate);
+      }
+    }
+
+    final all = [correct, ...wrongs.take(2)]..shuffle(Random());
+    _options = all
+        .map((m) => _QuizOption(text: m, isCorrect: m == correct))
         .toList();
+  }
 
-    final all = [correct, ...wrongs]..shuffle(Random());
+  Set<String> _keywords(String text) => text
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^\wáéíóúüñ\s]'), '')
+      .split(RegExp(r'\s+'))
+      .where((w) => w.length > 3)
+      .toSet();
 
-    _options = all.map((meaning) {
-      return _QuizOption(
-        text: meaning,
-        isCorrect: meaning == correct,
-      );
-    }).toList();
+  double _jaccard(Set<String> a, Set<String> b) {
+    if (a.isEmpty && b.isEmpty) return 0;
+    return a.intersection(b).length / a.union(b).length;
   }
 
   bool get _isCorrectSelected =>

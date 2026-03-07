@@ -5,7 +5,7 @@ import '../../data/models/story_model.dart';
 class StoryCard extends StatefulWidget {
   final StoryModel story;
 
-  const StoryCard({Key? key, required this.story}) : super(key: key);
+  const StoryCard({super.key, required this.story});
 
   @override
   State<StoryCard> createState() => _StoryCardState();

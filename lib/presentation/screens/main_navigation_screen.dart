@@ -3,13 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/injection_container.dart' as di;
-import '../../providers/guide_tour_provider.dart';
 import '../../theme/app_theme.dart';
 import '../providers/phrases_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
 import '../../providers/ad_provider.dart';
-import '../widgets/guide_tour_overlay.dart';
 import 'dashboard_screen.dart';
 import 'home_screen.dart';
 import 'stories_page.dart';
@@ -30,11 +28,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      if (mounted) {
-        context.read<GuideTourProvider>().initGuideTour();
-      }
-    });
   }
 
   @override
@@ -149,8 +142,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               },
             ),
           ),
-          // Guided Tour Overlay
-          const GuideTourOverlay(),
         ],
       ),
     );

@@ -6,7 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BannerAdCard extends StatelessWidget {
   final BannerAd bannerAd;
 
-  const BannerAdCard({Key? key, required this.bannerAd}) : super(key: key);
+  const BannerAdCard({super.key, required this.bannerAd});
 
   @override
   Widget build(BuildContext context) {

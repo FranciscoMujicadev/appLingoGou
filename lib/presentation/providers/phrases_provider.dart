@@ -26,11 +26,13 @@ class PhrasesProvider extends ChangeNotifier {
   String _selectedCategory = 'Nivel 1';
   List<PhraseEntity> _currentPhrases = [];
   int _currentIndex = 0;
+  final Map<String, int> _maxPhraseReached = {};
 
   List<CategoryEntity> get categories => _categories;
   String get selectedCategory => _selectedCategory;
   List<PhraseEntity> get currentPhrases => _currentPhrases;
   int get currentIndex => _currentIndex;
+  int getProgressForCategory(String cat) => _maxPhraseReached[cat] ?? 0;
   PhraseEntity? get currentPhrase =>
       _currentPhrases.isEmpty || _currentIndex >= _currentPhrases.length
       ? null
@@ -68,6 +70,8 @@ class PhrasesProvider extends ChangeNotifier {
 
   void changePage(int index) {
     _currentIndex = index;
+    final prev = _maxPhraseReached[_selectedCategory] ?? 0;
+    if (index + 1 > prev) _maxPhraseReached[_selectedCategory] = index + 1;
     if (currentPhrase != null) {
       incrementPhrasesViewedUseCase(currentPhrase!.id);
     }
