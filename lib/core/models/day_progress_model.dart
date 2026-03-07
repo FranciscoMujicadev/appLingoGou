@@ -6,15 +6,24 @@ class DayProgressModel {
   final bool isCompleted;
   final List<bool> phrasesUsed;
   final DateTime? completedAt;
-  final bool challengeConfirmed; // ← LÍNEA NUEVA
+  final bool challengeConfirmed;
 
   const DayProgressModel({
     required this.dayId,
     this.isUnlocked = false,
     this.isCompleted = false,
-    this.phrasesUsed = const [false, false, false, false, false],
+    this.phrasesUsed = const [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ], // ← CAMBIO AQUÍ: 8 elementos
     this.completedAt,
-    this.challengeConfirmed = false, // ← LÍNEA NUEVA
+    this.challengeConfirmed = false,
   });
 
   DayProgressModel copyWith({
@@ -23,7 +32,7 @@ class DayProgressModel {
     bool? isCompleted,
     List<bool>? phrasesUsed,
     DateTime? completedAt,
-    bool? challengeConfirmed, // ← LÍNEA NUEVA
+    bool? challengeConfirmed,
   }) {
     return DayProgressModel(
       dayId: dayId ?? this.dayId,
@@ -31,8 +40,7 @@ class DayProgressModel {
       isCompleted: isCompleted ?? this.isCompleted,
       phrasesUsed: phrasesUsed ?? this.phrasesUsed,
       completedAt: completedAt ?? this.completedAt,
-      challengeConfirmed:
-          challengeConfirmed ?? this.challengeConfirmed, // ← LÍNEA NUEVA
+      challengeConfirmed: challengeConfirmed ?? this.challengeConfirmed,
     );
   }
 
@@ -43,7 +51,7 @@ class DayProgressModel {
       'isCompleted': isCompleted,
       'phrasesUsed': phrasesUsed,
       'completedAt': completedAt?.toIso8601String(),
-      'challengeConfirmed': challengeConfirmed, // ← LÍNEA NUEVA
+      'challengeConfirmed': challengeConfirmed,
     };
   }
 
@@ -56,12 +64,20 @@ class DayProgressModel {
           (json['phrasesUsed'] as List<dynamic>?)
               ?.map((e) => e as bool)
               .toList() ??
-          [false, false, false, false, false],
+          [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ], // ← CAMBIO AQUÍ: 8 elementos
       completedAt: json['completedAt'] != null
           ? DateTime.parse(json['completedAt'] as String)
           : null,
-      challengeConfirmed:
-          json['challengeConfirmed'] as bool? ?? false, // ← LÍNEA NUEVA
+      challengeConfirmed: json['challengeConfirmed'] as bool? ?? false,
     );
   }
 

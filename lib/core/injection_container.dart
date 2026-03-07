@@ -5,18 +5,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Data sources
 import '../data/datasources/local_storage_datasource.dart';
-import '../data/datasources/giphy_datasource.dart';
 import '../data/datasources/phrases_datasource.dart';
 
 // Repositories
 import '../data/repositories/phrases_repository_impl.dart';
 import '../data/repositories/favorites_repository_impl.dart';
 import '../data/repositories/stats_repository_impl.dart';
-import '../data/repositories/gif_repository_impl.dart';
 import '../domain/repositories/phrases_repository.dart';
 import '../domain/repositories/favorites_repository.dart';
 import '../domain/repositories/stats_repository.dart';
-import '../domain/repositories/gif_repository.dart';
 
 // Use cases
 import '../domain/usecases/get_categories_usecase.dart';
@@ -24,7 +21,6 @@ import '../domain/usecases/get_phrases_by_category_usecase.dart';
 import '../domain/usecases/manage_favorites_usecase.dart';
 import '../domain/usecases/context_favorites_usecases.dart';
 import '../domain/usecases/stats_usecases.dart';
-import '../domain/usecases/get_gif_usecase.dart';
 
 // Providers
 import '../presentation/providers/phrases_provider.dart';
@@ -43,8 +39,6 @@ Future<void> init() async {
     () => LocalStorageDataSourceImpl(sharedPreferences: sl()),
   );
 
-  sl.registerLazySingleton<GiphyDataSource>(() => GiphyDataSourceImpl());
-
   sl.registerLazySingleton<PhrasesDataSource>(() => PhrasesDataSourceImpl());
 
   // ============ Repositories ============
@@ -58,10 +52,6 @@ Future<void> init() async {
 
   sl.registerLazySingleton<StatsRepository>(
     () => StatsRepositoryImpl(localDataSource: sl()),
-  );
-
-  sl.registerLazySingleton<GifRepository>(
-    () => GifRepositoryImpl(dataSource: sl()),
   );
 
   // ============ Use Cases ============
@@ -93,9 +83,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton(() => AddExploredCategoryUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetStatsUseCase(repository: sl()));
-
-  // GIFs
-  sl.registerLazySingleton(() => GetGifUseCase(repository: sl()));
+  sl.registerLazySingleton(
+    () => CheckAchievementsUseCase(repository: sl(), favoritesCount: 0),
+  );
 
   // ============ Providers ============
   sl.registerFactory(
@@ -104,7 +94,6 @@ Future<void> init() async {
       getPhrasesByCategoryUseCase: sl(),
       addExploredCategoryUseCase: sl(),
       incrementPhrasesViewedUseCase: sl(),
-      getGifUseCase: sl(),
       repository: sl(),
     ),
   );
@@ -122,5 +111,7 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory(() => StatsProvider());
+  sl.registerFactory(
+    () => StatsProvider(getStatsUseCase: sl(), checkAchievementsUseCase: sl()),
+  );
 }

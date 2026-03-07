@@ -1,126 +1,98 @@
+// lib/presentation/screens/stats_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/stats_provider.dart';
-import '../providers/favorites_provider.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: Consumer2<StatsProvider, FavoritesProvider>(
-          builder: (context, statsProvider, favProvider, _) {
-            // Actualizar logros cuando cambie el estado
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              statsProvider.updateAchievements(favProvider.favoritesCount);
-            });
-
+        child: Consumer<StatsProvider>(
+          builder: (context, statsProvider, _) {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Título de estadísticas
                   Text(
-                    'Estadísticas',
-                    style: GoogleFonts.poppins(
+                    '📊 Mis Estadísticas',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Tu progreso de aprendizaje',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Tarjetas de estadísticas
+                  _buildStatCard(
+                    context,
+                    'Frases Estudiadas',
+                    '${statsProvider.phrasesViewed}',
+                    Icons.book,
+                    Colors.blue,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildStatCard(
+                    context,
+                    'Veces Compartido',
+                    '${statsProvider.shareAttempts}',
+                    Icons.share,
+                    Colors.green,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildStatCard(
+                    context,
+                    'Categorías Exploradas',
+                    '${statsProvider.categoriesExplored}',
+                    Icons.explore,
+                    Colors.orange,
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Sección de logros
+                  Text(
+                    '🏆 Logros',
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildStatCard(
-                    'Frases favoritas',
-                    '${favProvider.favoritesCount}',
-                    Icons.favorite,
-                    Colors.red,
-                    showProgress: true,
-                    progress: favProvider.favoritesCount / 50.0,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildStatCard(
-                    'Frases estudiadas',
-                    '${statsProvider.phrasesViewed}',
-                    Icons.school,
-                    Colors.green,
-                    showProgress: true,
-                    progress: statsProvider.phrasesViewed / 100.0,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildStatCard(
-                    'Categorías exploradas',
-                    '${statsProvider.categoriesExplored}/4',
-                    Icons.explore,
-                    Colors.purple,
-                    showProgress: true,
-                    progress: statsProvider.categoriesExplored / 4.0,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildStatCard(
-                    'Veces compartido',
-                    '${statsProvider.shareAttempts}',
-                    Icons.share,
-                    Colors.orange,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildStatCard(
-                    'Tiempo de estudio',
-                    '${(statsProvider.phrasesViewed * 0.5).toStringAsFixed(1)} min',
-                    Icons.timer,
-                    Colors.blue,
-                    subtitle: 'Promedio: 30 seg por frase',
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    children: [
-                      Text(
-                        'Logros',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.amber.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '${statsProvider.getUnlockedAchievementsCount()}/6',
-                          style: const TextStyle(
-                            color: Colors.amber,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
                   _buildAchievement(
-                    'Primer paso',
-                    'Abre la app por primera vez',
+                    context,
+                    'Primer Paso',
+                    'Estudia tu primera frase',
                     statsProvider.hasFirstStep,
-                    icon: Icons.play_arrow,
+                    icon: Icons.stars,
+                    progress: statsProvider.phrasesViewed > 0 ? 1.0 : 0.0,
                   ),
                   _buildAchievement(
+                    context,
                     'Coleccionista',
                     'Guarda 5 frases favoritas',
                     statsProvider.isCollector,
                     icon: Icons.bookmark,
-                    progress: favProvider.favoritesCount / 5.0,
+                    progress: 0.0,
                   ),
                   _buildAchievement(
+                    context,
                     'Estudioso',
                     'Estudia 20 frases',
                     statsProvider.isStudious,
@@ -128,6 +100,7 @@ class StatsScreen extends StatelessWidget {
                     progress: statsProvider.phrasesViewed / 20.0,
                   ),
                   _buildAchievement(
+                    context,
                     'Explorador',
                     'Descubre todas las categorías',
                     statsProvider.isExplorer,
@@ -135,6 +108,7 @@ class StatsScreen extends StatelessWidget {
                     progress: statsProvider.categoriesExplored / 4.0,
                   ),
                   _buildAchievement(
+                    context,
                     'Compartir es vivir',
                     'Comparte 3 frases',
                     statsProvider.isSharer,
@@ -142,6 +116,7 @@ class StatsScreen extends StatelessWidget {
                     progress: statsProvider.shareAttempts / 3.0,
                   ),
                   _buildAchievement(
+                    context,
                     'Maestro del inglés',
                     'Estudia 50 frases',
                     statsProvider.isMaster,
@@ -160,30 +135,29 @@ class StatsScreen extends StatelessWidget {
   }
 
   Widget _buildStatCard(
+    BuildContext context,
     String title,
     String value,
     IconData icon,
-    Color color, {
-    String? subtitle,
-    bool showProgress = false,
-    double progress = 0.0,
-  }) {
+    Color color,
+  ) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[800]!),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(icon, color: color, size: 28),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -192,32 +166,20 @@ class StatsScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: onSurface.withValues(alpha: 0.7),
+                  ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                  style: TextStyle(
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
+                    color: color,
                   ),
                 ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
-                  ),
-                ],
-                if (showProgress) ...[
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: progress.clamp(0.0, 1.0),
-                    backgroundColor: Colors.grey[800],
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                    minHeight: 4,
-                  ),
-                ],
               ],
             ),
           ),
@@ -227,21 +189,27 @@ class StatsScreen extends StatelessWidget {
   }
 
   Widget _buildAchievement(
+    BuildContext context,
     String title,
     String description,
     bool isUnlocked, {
-    IconData? icon,
-    double progress = 0.0,
+    required IconData icon,
+    required double progress,
   }) {
+    final clampedProgress = progress.clamp(0.0, 1.0);
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isUnlocked ? Colors.amber : Colors.grey[800]!,
-          width: isUnlocked ? 2 : 1,
+          color: isUnlocked
+              ? Colors.amber.withValues(alpha: 0.5)
+              : Colors.grey.withValues(alpha: 0.2),
+          width: 2,
         ),
       ),
       child: Column(
@@ -249,17 +217,17 @@ class StatsScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isUnlocked
-                      ? Colors.amber.withOpacity(0.2)
-                      : Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                      ? Colors.amber.withValues(alpha: 0.2)
+                      : Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  icon ?? (isUnlocked ? Icons.check_circle : Icons.lock),
+                  icon,
                   color: isUnlocked ? Colors.amber : Colors.grey,
-                  size: 20,
+                  size: 24,
                 ),
               ),
               const SizedBox(width: 16),
@@ -270,44 +238,44 @@ class StatsScreen extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: isUnlocked ? Colors.white : Colors.grey,
-                        fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: onSurface,
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       description,
                       style: TextStyle(
-                        color: isUnlocked ? Colors.grey[400] : Colors.grey[600],
-                        fontSize: 14,
+                        fontSize: 13,
+                        color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
                 ),
               ),
               if (isUnlocked)
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.amber,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.star, color: Colors.black, size: 16),
-                ),
+                const Icon(Icons.check_circle, color: Colors.amber, size: 28),
             ],
           ),
-          if (!isUnlocked && progress > 0) ...[
+          if (!isUnlocked && clampedProgress > 0) ...[
             const SizedBox(height: 12),
-            LinearProgressIndicator(
-              value: progress.clamp(0.0, 1.0),
-              backgroundColor: Colors.grey[800],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
-              minHeight: 6,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: clampedProgress,
+                backgroundColor: Colors.grey.withValues(alpha: 0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
+                minHeight: 8,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
-              '${(progress * 100).toInt()}% completado',
-              style: TextStyle(color: Colors.grey[500], fontSize: 12),
+              '${(clampedProgress * 100).toInt()}% completado',
+              style: TextStyle(
+                fontSize: 12,
+                color: onSurface.withValues(alpha: 0.6),
+              ),
             ),
           ],
         ],
@@ -316,62 +284,45 @@ class StatsScreen extends StatelessWidget {
   }
 
   Widget _buildOverallProgress(StatsProvider statsProvider) {
-    final totalPossible = 100;
-    final currentProgress = statsProvider.phrasesViewed;
-    final percentage = (currentProgress / totalPossible).clamp(0.0, 1.0);
+    final totalAchievements = 6;
+    final unlockedAchievements = statsProvider.getUnlockedAchievementsCount();
+    final progress = unlockedAchievements / totalAchievements;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.purple.withOpacity(0.3),
-            Colors.blue.withOpacity(0.3),
-          ],
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6C63FF), Color(0xFF4834DF)],
         ),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.purple.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.trending_up, color: Colors.purple, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                'Progreso General',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          const Text(
+            '🎯 Progreso General',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 16),
-          LinearProgressIndicator(
-            value: percentage,
-            backgroundColor: Colors.grey[800],
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.purple),
-            minHeight: 8,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.white.withOpacity(0.3),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              minHeight: 12,
+            ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$currentProgress de $totalPossible frases',
-                style: TextStyle(color: Colors.grey[300], fontSize: 14),
-              ),
-              Text(
-                '${(percentage * 100).toInt()}%',
-                style: const TextStyle(
-                  color: Colors.purple,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          const SizedBox(height: 12),
+          Text(
+            '$unlockedAchievements de $totalAchievements logros desbloqueados',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white.withOpacity(0.9),
+            ),
           ),
         ],
       ),

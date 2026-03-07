@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/utils/tts_service.dart';
+import '../../providers/theme_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
 
@@ -72,8 +73,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Consumer<FavoritesProvider>(
           builder: (context, favoritesProvider, _) {
@@ -88,23 +90,44 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         style: GoogleFonts.poppins(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const Spacer(),
+                      Consumer<ThemeProvider>(
+                        builder: (context, themeProvider, _) {
+                          return AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: IconButton(
+                              key: ValueKey(themeProvider.isDarkMode),
+                              onPressed: themeProvider.toggleTheme,
+                              icon: Icon(
+                                themeProvider.isDarkMode
+                                    ? Icons.wb_sunny_rounded
+                                    : Icons.nightlight_round,
+                                color: theme.colorScheme.primary,
+                              ),
+                              tooltip: themeProvider.isDarkMode
+                                  ? 'Modo claro'
+                                  : 'Modo oscuro',
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.2),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           '${favoritesProvider.totalFavoritesCount}',
-                          style: const TextStyle(
-                            color: Colors.red,
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -115,16 +138,16 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.grey[900],
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TabBar(
                     controller: _tabController,
                     indicator: BoxDecoration(
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 54, 114, 244),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    labelColor: Colors.white,
+                    labelColor: const Color.fromARGB(255, 255, 255, 255),
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(
@@ -203,12 +226,13 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       itemBuilder: (context, index) {
         final phrase = favorites[index];
 
+        final theme = Theme.of(context);
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: Colors.grey[900],
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.grey[800]!, width: 1),
+            border: Border.all(color: theme.dividerColor, width: 1),
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.all(16),
@@ -218,21 +242,24 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                 Text(
                   phrase.english,
                   style: GoogleFonts.poppins(
-                    fontSize: 16,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   phrase.spanish,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[300]),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   phrase.pronunciation,
                   style: GoogleFonts.robotoMono(
-                    fontSize: 12,
+                    fontSize: 15,
                     color: Colors.grey[500],
                   ),
                 ),
@@ -242,7 +269,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 'Categoría: ${phrase.category}',
-                style: TextStyle(fontSize: 12, color: Colors.blue[300]),
+                style: TextStyle(fontSize: 14, color: Colors.blue[300]),
               ),
             ),
             trailing: Row(
@@ -297,20 +324,37 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       itemCount: favoriteContexts.length,
       itemBuilder: (context, index) {
         final contextItem = favoriteContexts[index];
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final onSurface = Theme.of(context).colorScheme.onSurface;
 
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.pink.shade900.withOpacity(0.3),
-                Colors.purple.shade900.withOpacity(0.3),
-              ],
-            ),
+            gradient: isDark
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.pink.shade900.withValues(alpha: 0.3),
+                      Colors.purple.shade900.withValues(alpha: 0.3),
+                    ],
+                  )
+                : null,
+            color: isDark ? null : Colors.white,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.pink.withOpacity(0.5), width: 2),
+            border: Border.all(
+              color: Colors.pink.withValues(alpha: isDark ? 0.5 : 0.4),
+              width: 2,
+            ),
+            boxShadow: isDark
+                ? null
+                : [
+                    BoxShadow(
+                      color: Colors.pink.withValues(alpha: 0.12),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -331,16 +375,18 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           Text(
                             contextItem.phraseIdiom,
                             style: GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 21,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: isDark ? Colors.white : onSurface,
                             ),
                           ),
                           Text(
                             contextItem.context,
                             style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.pink.shade200,
+                              fontSize: 14,
+                              color: isDark
+                                  ? Colors.pink.shade200
+                                  : Colors.pink.shade700,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -353,7 +399,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.3)
+                        : Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -361,9 +409,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                     children: [
                       Text(
                         '"${contextItem.englishExample}"',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isDark ? Colors.white : onSurface,
                           fontStyle: FontStyle.italic,
                           height: 1.4,
                         ),
@@ -373,8 +421,10 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         Text(
                           '🗣️ ${contextItem.pronunciation}',
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.orange.shade300,
+                            fontSize: 15,
+                            color: isDark
+                                ? Colors.orange.shade300
+                                : Colors.orange.shade700,
                           ),
                         ),
                       ],
@@ -382,14 +432,16 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.2),
+                          color: Colors.green.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           '🇲🇽 ${contextItem.spanishExample}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.white,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark
+                                ? Colors.white
+                                : Colors.green.shade800,
                             height: 1.3,
                           ),
                         ),
@@ -412,8 +464,10 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       child: Text(
                         contextItem.category,
                         style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.blue.shade300,
+                          fontSize: 12,
+                          color: isDark
+                              ? Colors.blue.shade300
+                              : Colors.blue.shade700,
                         ),
                       ),
                     ),

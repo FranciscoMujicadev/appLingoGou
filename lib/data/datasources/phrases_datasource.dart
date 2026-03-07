@@ -4,7 +4,109 @@ import 'package:flutter/material.dart';
 import '../../core/models/phrase_model.dart';
 import '../../core/models/category_model.dart';
 import '../../core/models/day_progress_model.dart';
-import '../../../core/service/progress_service.dart';
+import '../../core/service/progress_service.dart';
+
+// Importar todos los datasources de días
+import 'days/day1_datasource.dart';
+import 'days/day2_datasource.dart';
+import 'days/day3_datasource.dart';
+import 'days/day4_datasource.dart';
+import 'days/day5_datasource.dart';
+import 'days/day6_datasource.dart';
+import 'days/day7_datasource.dart';
+import 'days/day8_datasource.dart';
+import 'days/day9_datasource.dart';
+import 'days/day10_datasource.dart';
+import 'days/day11_datasource.dart';
+import 'days/day12_datasource.dart';
+import 'days/day13_datasource.dart';
+import 'days/day14_datasource.dart';
+import 'days/day15_datasource.dart';
+import 'days/day16_datasource.dart';
+import 'days/day17_datasource.dart';
+import 'days/day18_datasource.dart';
+import 'days/day19_datasource.dart';
+import 'days/day20_datasource.dart';
+import 'days/day21_datasource.dart';
+import 'days/day22_datasource.dart';
+import 'days/day23_datasource.dart';
+import 'days/day24_datasource.dart';
+import 'days/day25_datasource.dart';
+import 'days/day26_datasource.dart';
+import 'days/day27_datasource.dart';
+import 'days/day28_datasource.dart';
+import 'days/day29_datasource.dart';
+import 'days/day30_datasource.dart';
+import 'days/day31_datasource.dart';
+import 'days/day32_datasource.dart';
+import 'days/day33_datasource.dart';
+import 'days/day34_datasource.dart';
+import 'days/day35_datasource.dart';
+import 'days/day36_datasource.dart';
+import 'days/day37_datasource.dart';
+import 'days/day38_datasource.dart';
+import 'days/day39_datasource.dart';
+import 'days/day40_datasource.dart';
+import 'days/day41_datasource.dart';
+import 'days/day42_datasource.dart';
+import 'days/day43_datasource.dart';
+import 'days/day44_datasource.dart';
+import 'days/day45_datasource.dart';
+import 'days/day46_datasource.dart';
+import 'days/day47_datasource.dart';
+import 'days/day48_datasource.dart';
+import 'days/day49_datasource.dart';
+import 'days/day50_datasource.dart';
+import 'days/day51_datasource.dart';
+import 'days/day52_datasource.dart';
+import 'days/day53_datasource.dart';
+import 'days/day54_datasource.dart';
+import 'days/day55_datasource.dart';
+import 'days/day56_datasource.dart';
+import 'days/day57_datasource.dart';
+import 'days/day58_datasource.dart';
+import 'days/day59_datasource.dart';
+import 'days/day60_datasource.dart';
+import 'days/day61_datasource.dart';
+import 'days/day62_datasource.dart';
+import 'days/day63_datasource.dart';
+import 'days/day64_datasource.dart';
+import 'days/day65_datasource.dart';
+import 'days/day66_datasource.dart';
+import 'days/day67_datasource.dart';
+import 'days/day68_datasource.dart';
+import 'days/day69_datasource.dart';
+import 'days/day70_datasource.dart';
+import 'days/day71_datasource.dart';
+import 'days/day72_datasource.dart';
+import 'days/day73_datasource.dart';
+import 'days/day74_datasource.dart';
+import 'days/day75_datasource.dart';
+import 'days/day76_datasource.dart';
+import 'days/day77_datasource.dart';
+import 'days/day78_datasource.dart';
+import 'days/day79_datasource.dart';
+import 'days/day80_datasource.dart';
+import 'days/day81_datasource.dart';
+import 'days/day82_datasource.dart';
+import 'days/day83_datasource.dart';
+import 'days/day84_datasource.dart';
+import 'days/day85_datasource.dart';
+import 'days/day86_datasource.dart';
+import 'days/day87_datasource.dart';
+import 'days/day88_datasource.dart';
+import 'days/day89_datasource.dart';
+import 'days/day90_datasource.dart';
+import 'days/day91_datasource.dart';
+import 'days/day92_datasource.dart';
+import 'days/day93_datasource.dart';
+import 'days/day94_datasource.dart';
+import 'days/day95_datasource.dart';
+import 'days/day96_datasource.dart';
+import 'days/day97_datasource.dart';
+import 'days/day98_datasource.dart';
+import 'days/day99_datasource.dart';
+import 'days/day100_datasource.dart';
 
 abstract class PhrasesDataSource {
   List<CategoryModel> getCategories();
@@ -21,1715 +123,240 @@ abstract class PhrasesDataSource {
 class PhrasesDataSourceImpl implements PhrasesDataSource {
   final ProgressService _progressService = ProgressService();
 
+  // Mapa centralizado que obtiene las frases de cada nivel desde sus archivos individuales
   final Map<String, List<Phrase>> _phrasesByCategory = {
-    'Día 1': [
-      Phrase(
-        id: '1-1',
-        idiom: 'Hit the hay',
-        literalTranslation: 'Golpear el heno',
-        realMeaning: 'Irse a dormir',
-        category: 'Día 1',
-        pronunciation: 'jit de jei',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I'm done for today, bro. Time to hit the hay.",
-            pronunciation: "aim dan for tudei, bro. taim tu jit de jei",
-            spanishExample: 'Ya estuvo por hoy, bro. Es hora de dormir.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                'Time to hit the hay, champ. We have cartoons to watch tomorrow.',
-            pronunciation:
-                'taim tu jit de jei, champ. wi jav kartuns tu wach tumorrow',
-            spanishExample:
-                'Hora de dormir, campeón. Mañana tenemos caricaturas que ver.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "I'll hit the hay now, Mom. I have to wake up early.",
-            pronunciation: 'ail jit de jei nau, mom. ai jav tu weik ap erli',
-            spanishExample:
-                'Me voy a dormir ya, mamá. Tengo que levantarme temprano.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Come on, let's hit the hay before Dad gets mad.",
-            pronunciation: 'kom on, lets jit de jei bifor dad gets mad',
-            spanishExample: 'Vamos a dormir antes de que papá se enoje.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-2',
-        idiom: 'Rise and shine',
-        literalTranslation: 'Levantarse y brillar',
-        realMeaning: 'Despertarse con energía',
-        category: 'Día 1',
-        pronunciation: 'rais and shain',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Rise and shine, buddy! We've got plans today.",
-            pronunciation: 'rais and shain, badi! wiv got plans tudei',
-            spanishExample: '¡Arriba y a brillar, compa! Tenemos planes hoy.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: 'Rise and shine, sweetheart! Breakfast is ready.',
-            pronunciation: 'rais and shain, swítjart! brekfast is redi',
-            spanishExample: '¡Arriba, cariño! El desayuno está listo.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Rise and shine, Mom! I made you coffee.",
-            pronunciation: 'rais and shain, mom! ai meid yu kofi',
-            spanishExample: '¡Arriba, mamá! Te hice café.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Rise and shine! You're gonna be late for school.",
-            pronunciation: 'rais and shain! yor gona bi leit for skul',
-            spanishExample: '¡Levántate! Vas a llegar tarde a la escuela.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-3',
-        idiom: 'Catch some Z\'s',
-        literalTranslation: 'Atrapar algunas Z',
-        realMeaning: 'Dormir un poco',
-        category: 'Día 1',
-        pronunciation: 'kach som zis',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I need to catch some Z's before the party.",
-            pronunciation: 'ai nid tu kach som zis bifor de parti',
-            spanishExample: 'Necesito dormir un poco antes de la fiesta.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: 'Go catch some Z\'s, you look tired.',
-            pronunciation: 'gou kach som zis, yu luk taird',
-            spanishExample: 'Ve a dormir un rato, te ves cansado.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm going to catch some Z's before dinner, Dad.",
-            pronunciation: 'aim gouin tu kach som zis bifor diner, dad',
-            spanishExample: 'Voy a dormir un rato antes de la cena, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Let me catch some Z's, I'm exhausted.",
-            pronunciation: 'let mi kach som zis, aim exosted',
-            spanishExample: 'Déjame dormir, estoy agotado.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-4',
-        idiom: 'Sleep like a log',
-        literalTranslation: 'Dormir como un tronco',
-        realMeaning: 'Dormir profundamente',
-        category: 'Día 1',
-        pronunciation: 'slip laik a log',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I slept like a log after the gym yesterday.",
-            pronunciation: 'ai slept laik a log after de yim yesterdei',
-            spanishExample: 'Dormí como bebé después del gym ayer.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: 'Did you sleep like a log last night?',
-            pronunciation: 'did yu slip laik a log last nait',
-            spanishExample: '¿Dormiste profundo anoche?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I slept like a log, Mom. That bed is so comfy.",
-            pronunciation: 'ai slept laik a log, mom. dat bed is sou komfi',
-            spanishExample: 'Dormí súper bien, mamá. Esa cama está muy cómoda.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You were snoring! You slept like a log.",
-            pronunciation: 'yu wer snorin! yu slept laik a log',
-            spanishExample: '¡Estabas roncando! Dormiste profundísimo.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-5',
-        idiom: 'Call it a day',
-        literalTranslation: 'Llamarlo un día',
-        realMeaning: 'Terminar el trabajo por hoy',
-        category: 'Día 1',
-        pronunciation: 'kol it a dei',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Let's call it a day and grab some beers.",
-            pronunciation: 'lets kol it a dei and grab som birs',
-            spanishExample: 'Terminemos por hoy y vamos por unas chelas.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You've done enough homework. Let's call it a day.",
-            pronunciation: 'yuv dan inaf jomwerk. lets kol it a dei',
-            spanishExample: 'Ya hiciste suficiente tarea. Terminemos por hoy.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm calling it a day, Dad. I'm too tired.",
-            pronunciation: 'aim kolin it a dei, dad. aim tu taird',
-            spanishExample: 'Ya termino por hoy, papá. Estoy muy cansado.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Let's call it a day and play video games.",
-            pronunciation: 'lets kol it a dei and plei video geims',
-            spanishExample: 'Ya terminemos y juguemos videojuegos.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-6',
-        idiom: 'Burn the midnight oil',
-        literalTranslation: 'Quemar el aceite de medianoche',
-        realMeaning: 'Trabajar hasta tarde en la noche',
-        category: 'Día 1',
-        pronunciation: 'bern de midnait oil',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "I had to burn the midnight oil to finish that project.",
-            pronunciation:
-                'ai jad tu bern de midnait oil tu finish dat proyekt',
-            spanishExample: 'Tuve que desvelarme para terminar ese proyecto.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                "Don't burn the midnight oil studying. You need rest.",
-            pronunciation: 'dont bern de midnait oil studiing. yu nid rest',
-            spanishExample: 'No te desveles estudiando. Necesitas descansar.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "I'm burning the midnight oil tonight, Mom. Big exam tomorrow.",
-            pronunciation:
-                'aim bernin de midnait oil tunait, mom. big exam tumorou',
-            spanishExample:
-                'Me voy a desvelar hoy, mamá. Examen importante mañana.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Stop burning the midnight oil. It's not healthy.",
-            pronunciation: 'stop bernin de midnait oil. its not jelzi',
-            spanishExample: 'Deja de desvelarte. No es saludable.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-7',
-        idiom: 'Early bird catches the worm',
-        literalTranslation: 'El pájaro madrugador atrapa el gusano',
-        realMeaning: 'Quien madruga tiene ventaja',
-        category: 'Día 1',
-        pronunciation: 'erli berd kaches de werm',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "Early bird catches the worm! Let's go to the gym now.",
-            pronunciation: 'erli berd kaches de werm! lets gou tu de yim nau',
-            spanishExample:
-                '¡Al que madruga Dios le ayuda! Vamos al gym ahora.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                "Early bird catches the worm, kiddo. Time to wake up!",
-            pronunciation: 'erli berd kaches de werm, kido. taim tu weik ap',
-            spanishExample:
-                'El que madruga tiene ventaja, campeón. ¡Hora de levantarse!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "You're right, Dad. Early bird catches the worm.",
-            pronunciation: 'yor rait, dad. erli berd kaches de werm',
-            spanishExample: 'Tienes razón, papá. Al que madruga Dios le ayuda.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample:
-                "Early bird catches the worm! Get up, we'll miss the sale.",
-            pronunciation: 'erli berd kaches de werm! get ap, wil mis de seil',
-            spanishExample:
-                '¡Al que madruga! Levántate, nos perdemos la oferta.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '1-8',
-        idiom: 'Hit the sack',
-        literalTranslation: 'Golpear el saco',
-        realMeaning: 'Irse a la cama',
-        category: 'Día 1',
-        pronunciation: 'jit de sak',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I'm gonna hit the sack, bro. See you tomorrow.",
-            pronunciation: 'aim gona jit de sak, bro. si yu tumorou',
-            spanishExample: 'Me voy a dormir, bro. Te veo mañana.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Time to hit the sack, little one. Sweet dreams.",
-            pronunciation: 'taim tu jit de sak, litel wan. swit drims',
-            spanishExample: 'Hora de ir a la cama, pequeño. Dulces sueños.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm hitting the sack now, Mom. Good night!",
-            pronunciation: 'aim jitin de sak nau, mom. gud nait',
-            spanishExample: 'Ya me voy a dormir, mamá. ¡Buenas noches!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Let's hit the sack. We have school tomorrow.",
-            pronunciation: 'lets jit de sak. wi jav skul tumorou',
-            spanishExample: 'Vámonos a dormir. Mañana hay escuela.',
-          ),
-        ],
-      ),
-    ],
-
-    // DÍA 2 CONTINÚA...
-    'Día 2': [
-      Phrase(
-        id: '2-1',
-        idiom: 'Piece of cake',
-        literalTranslation: 'Pedazo de pastel',
-        realMeaning: 'Muy fácil',
-        category: 'Día 2',
-        pronunciation: 'pis of keik',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "That exam was a piece of cake!",
-            pronunciation: 'dat exam was a pis of keik',
-            spanishExample: '¡Ese examen estuvo facilísimo!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Don't worry, it'll be a piece of cake.",
-            pronunciation: 'dont wori, itl bi a pis of keik',
-            spanishExample: 'No te preocupes, va a estar muy fácil.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "The interview was a piece of cake, Mom!",
-            pronunciation: 'de interviu was a pis of keik, mom',
-            spanishExample: '¡La entrevista estuvo facilísima, mamá!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Fixing this? Piece of cake for me.",
-            pronunciation: 'fixsin dis? pis of keik for mi',
-            spanishExample: '¿Arreglar esto? Pan comido para mí.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-2',
-        idiom: 'Spill the beans',
-        literalTranslation: 'Derramar los frijoles',
-        realMeaning: 'Revelar un secreto',
-        category: 'Día 2',
-        pronunciation: 'spil de bins',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Come on, spill the beans! What happened?",
-            pronunciation: 'kom on, spil de bins! wat japend',
-            spanishExample: '¡Anda, suelta la sopa! ¿Qué pasó?',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                "Did your brother spill the beans about the surprise?",
-            pronunciation: 'did yor brader spil de bins abaut de surprais',
-            spanishExample: '¿Tu hermano ya reveló la sorpresa?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I won't spill the beans, Mom. I promise!",
-            pronunciation: 'ai wont spil de bins, mom. ai promis',
-            spanishExample: 'No voy a decir el secreto, mamá. ¡Lo prometo!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Don't spill the beans about Dad's gift!",
-            pronunciation: 'dont spil de bins abaut dads gift',
-            spanishExample: '¡No digas nada del regalo de papá!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-3',
-        idiom: 'Break the ice',
-        literalTranslation: 'Romper el hielo',
-        realMeaning: 'Iniciar una conversación incómoda',
-        category: 'Día 2',
-        pronunciation: 'breik de ais',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Let me break the ice with a joke.",
-            pronunciation: 'let mi breik de ais wid a yok',
-            spanishExample: 'Déjame romper el hielo con un chiste.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Just say hi to break the ice!",
-            pronunciation: 'yast sei jai tu breik de ais',
-            spanishExample: '¡Solo di hola para romper el hielo!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Thanks for breaking the ice, Dad.",
-            pronunciation: 'zanks for breikin de ais, dad',
-            spanishExample: 'Gracias por romper el hielo, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Can you break the ice? I'm too nervous.",
-            pronunciation: 'kan yu breik de ais? aim tu nervos',
-            spanishExample: '¿Puedes romper el hielo? Estoy muy nervioso.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-4',
-        idiom: 'Cost an arm and a leg',
-        literalTranslation: 'Costar un brazo y una pierna',
-        realMeaning: 'Ser muy caro',
-        category: 'Día 2',
-        pronunciation: 'kost an arm and a leg',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "That new phone costs an arm and a leg!",
-            pronunciation: 'dat niu fon kosts an arm and a leg',
-            spanishExample: '¡Ese teléfono nuevo cuesta un ojo de la cara!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Those toys cost an arm and a leg, sweetie.",
-            pronunciation: 'dous tois kost an arm and a leg, switi',
-            spanishExample: 'Esos juguetes cuestan carísimo, cariño.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "College costs an arm and a leg, Mom.",
-            pronunciation: 'kolech kosts an arm and a leg, mom',
-            spanishExample: 'La universidad cuesta un ojo de la cara, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Those sneakers cost an arm and a leg.",
-            pronunciation: 'dous snikers kost an arm and a leg',
-            spanishExample: 'Esos tenis cuestan carísimo.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-5',
-        idiom: 'Under the weather',
-        literalTranslation: 'Bajo el clima',
-        realMeaning: 'Sentirse mal o enfermo',
-        category: 'Día 2',
-        pronunciation: 'ander de weder',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I'm feeling under the weather today, bro.",
-            pronunciation: 'aim filin ander de weder tudei, bro',
-            spanishExample: 'Me siento mal hoy, bro.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Are you feeling under the weather, honey?",
-            pronunciation: 'ar yu filin ander de weder, joni',
-            spanishExample: '¿Te sientes mal, cariño?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm a bit under the weather, Mom. Can I rest?",
-            pronunciation: 'aim a bit ander de weder, mom. kan ai rest',
-            spanishExample: 'Me siento un poco mal, mamá. ¿Puedo descansar?',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You look under the weather. Want some tea?",
-            pronunciation: 'yu luk ander de weder. want som ti',
-            spanishExample: 'Te ves mal. ¿Quieres un té?',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-6',
-        idiom: 'Once in a blue moon',
-        literalTranslation: 'Una vez en una luna azul',
-        realMeaning: 'Muy raramente',
-        category: 'Día 2',
-        pronunciation: 'wans in a blu mun',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I only see him once in a blue moon.",
-            pronunciation: 'ai onli si jim wans in a blu mun',
-            spanishExample: 'Solo lo veo de vez en cuando.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "We go to the beach once in a blue moon.",
-            pronunciation: 'wi gou tu de bich wans in a blu mun',
-            spanishExample: 'Vamos a la playa muy de vez en cuando.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I eat fast food once in a blue moon, Dad.",
-            pronunciation: 'ai it fast fud wans in a blu mun, dad',
-            spanishExample: 'Como comida rápida muy raramente, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You clean your room once in a blue moon!",
-            pronunciation: 'yu klin yor rum wans in a blu mun',
-            spanishExample: '¡Limpias tu cuarto de vez en nunca!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-7',
-        idiom: 'Let the cat out of the bag',
-        literalTranslation: 'Dejar salir al gato de la bolsa',
-        realMeaning: 'Revelar un secreto accidentalmente',
-        category: 'Día 2',
-        pronunciation: 'let de kat aut of de bag',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "Oops, I let the cat out of the bag about the party.",
-            pronunciation: 'ups, ai let de kat aut of de bag abaut de parti',
-            spanishExample: 'Ups, se me salió lo de la fiesta.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Don't let the cat out of the bag about Santa!",
-            pronunciation: 'dont let de kat aut of de bag abaut santa',
-            spanishExample: '¡No digas el secreto de Santa!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Sorry, Mom. I let the cat out of the bag.",
-            pronunciation: 'sori, mom. ai let de kat aut of de bag',
-            spanishExample: 'Perdón, mamá. Se me escapó el secreto.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You let the cat out of the bag! Dad knows now.",
-            pronunciation: 'yu let de kat aut of de bag! dad nous nau',
-            spanishExample: '¡Soltaste la sopa! Papá ya sabe.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '2-8',
-        idiom: 'Bite the bullet',
-        literalTranslation: 'Morder la bala',
-        realMeaning: 'Enfrentar algo difícil con valentía',
-        category: 'Día 2',
-        pronunciation: 'bait de bulet',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I had to bite the bullet and tell her the truth.",
-            pronunciation: 'ai jad tu bait de bulet and tel jer de truz',
-            spanishExample: 'Tuve que armarse de valor y decirle la verdad.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Sometimes you need to bite the bullet, kiddo.",
-            pronunciation: 'somtaims yu nid tu bait de bulet, kido',
-            spanishExample: 'A veces tienes que ser valiente, campeón.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'll bite the bullet and talk to my boss, Dad.",
-            pronunciation: 'ail bait de bulet and tok tu mai bos, dad',
-            spanishExample:
-                'Voy a armarse de valor y hablar con mi jefe, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Just bite the bullet and do it!",
-            pronunciation: 'yast bait de bulet and du it',
-            spanishExample: '¡Solo hazlo de una vez!',
-          ),
-        ],
-      ),
-    ],
-
-    'Día 3': [
-      Phrase(
-        id: '3-1',
-        idiom: 'Break a leg',
-        literalTranslation: 'Rómpete una pierna',
-        realMeaning: 'Buena suerte',
-        category: 'Día 3',
-        pronunciation: 'breik a leg',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Break a leg on your presentation, buddy!",
-            pronunciation: 'breik a leg on yor presenteishon, badi',
-            spanishExample: '¡Mucha suerte en tu presentación, compa!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Break a leg at your game today!",
-            pronunciation: 'breik a leg at yor geim tudei',
-            spanishExample: '¡Mucha suerte en tu juego hoy!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Thanks, Mom! Break a leg at work too!",
-            pronunciation: 'zanks, mom! breik a leg at werk tu',
-            spanishExample: '¡Gracias, mamá! ¡Suerte en el trabajo también!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Break a leg on your exam tomorrow!",
-            pronunciation: 'breik a leg on yor exam tumorou',
-            spanishExample: '¡Suerte en tu examen mañana!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-2',
-        idiom: 'When pigs fly',
-        literalTranslation: 'Cuando los cerdos vuelen',
-        realMeaning: 'Nunca va a pasar',
-        category: 'Día 3',
-        pronunciation: 'wen pigs flai',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "He'll pay me back when pigs fly!",
-            pronunciation: 'jil pei mi bak wen pigs flai',
-            spanishExample: '¡Me va a pagar cuando las vacas vuelen!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You'll clean your room? When pigs fly!",
-            pronunciation: 'yul klin yor rum? wen pigs flai',
-            spanishExample:
-                '¿Vas a limpiar tu cuarto? ¡Cuando las ranas críen pelo!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Dad will dance? When pigs fly!",
-            pronunciation: 'dad wil dans? wen pigs flai',
-            spanishExample: '¿Papá va a bailar? ¡Nunca!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You'll wake up early? When pigs fly!",
-            pronunciation: 'yul weik ap erli? wen pigs flai',
-            spanishExample: '¿Te vas a despertar temprano? ¡Eso nunca!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-3',
-        idiom: 'Get cold feet',
-        literalTranslation: 'Tener pies fríos',
-        realMeaning: 'Acobardarse en el último momento',
-        category: 'Día 3',
-        pronunciation: 'get kold fit',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Don't get cold feet now! You can do this.",
-            pronunciation: 'dont get kold fit nau! yu kan du dis',
-            spanishExample: '¡No te acobardes ahora! Tú puedes.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "It's okay if you get cold feet. We can try later.",
-            pronunciation: 'its okey if yu get kold fit. wi kan trai leiter',
-            spanishExample:
-                'Está bien si te da miedo. Podemos intentar después.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm getting cold feet about the interview, Mom.",
-            pronunciation: 'aim getin kold fit abaut de interviu, mom',
-            spanishExample: 'Me está dando miedo la entrevista, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Don't get cold feet! Just ask her out.",
-            pronunciation: 'dont get kold fit! yast ask jer aut',
-            spanishExample: '¡No te acobardes! Solo invítala.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-4',
-        idiom: 'Barking up the wrong tree',
-        literalTranslation: 'Ladrando al árbol equivocado',
-        realMeaning: 'Buscar en el lugar equivocado',
-        category: 'Día 3',
-        pronunciation: 'barkin ap de rong tri',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "If you think I ate your pizza, you're barking up the wrong tree.",
-            pronunciation:
-                'if yu zink ai eit yor pitsa, yor barkin ap de rong tri',
-            spanishExample:
-                'Si crees que me comí tu pizza, estás buscando en el lugar equivocado.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                "You're barking up the wrong tree. Your sister took it.",
-            pronunciation: 'yor barkin ap de rong tri. yor sister tuk it',
-            spanishExample:
-                'Estás buscando en el lugar equivocado. Tu hermana lo tomó.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "You're barking up the wrong tree, Dad. I didn't do it.",
-            pronunciation: 'yor barkin ap de rong tri, dad. ai didnt du it',
-            spanishExample: 'Te estás equivocando, papá. Yo no fui.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You're barking up the wrong tree. Check his room.",
-            pronunciation: 'yor barkin ap de rong tri. chek jis rum',
-            spanishExample: 'Estás buscando mal. Revisa su cuarto.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-5',
-        idiom: 'The ball is in your court',
-        literalTranslation: 'La pelota está en tu cancha',
-        realMeaning: 'Es tu turno de decidir o actuar',
-        category: 'Día 3',
-        pronunciation: 'de bol is in yor kort',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I made my offer. The ball is in your court now.",
-            pronunciation: 'ai meid mai ofer. de bol is in yor kort nau',
-            spanishExample: 'Ya hice mi oferta. Ahora te toca a ti.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You decide what to do. The ball is in your court.",
-            pronunciation: 'yu disaid wat tu du. de bol is in yor kort',
-            spanishExample: 'Tú decides qué hacer. La decisión es tuya.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "I applied everywhere, Mom. The ball is in their court.",
-            pronunciation: 'ai aplaid evriuer, mom. de bol is in deir kort',
-            spanishExample:
-                'Ya apliqué a todos lados, mamá. Ahora depende de ellos.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "I said I'm sorry. The ball is in your court.",
-            pronunciation: 'ai sed aim sori. de bol is in yor kort',
-            spanishExample: 'Ya pedí perdón. Ahora tú decides.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-6',
-        idiom: 'Cut to the chase',
-        literalTranslation: 'Cortar a la persecución',
-        realMeaning: 'Ir al grano',
-        category: 'Día 3',
-        pronunciation: 'kat tu de cheis',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Let's cut to the chase. Do you like her or not?",
-            pronunciation: 'lets kat tu de cheis. du yu laik jer or not',
-            spanishExample: 'Vamos al grano. ¿Te gusta o no?',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Cut to the chase. What do you want?",
-            pronunciation: 'kat tu de cheis. wat du yu want',
-            spanishExample: 'Ve al grano. ¿Qué quieres?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Okay, Dad. Let me cut to the chase. I need help.",
-            pronunciation: 'okey, dad. let mi kat tu de cheis. ai nid jelp',
-            spanishExample: 'Okay, papá. Voy al grano. Necesito ayuda.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Cut to the chase! Did you break my laptop?",
-            pronunciation: 'kat tu de cheis! did yu breik mai laptop',
-            spanishExample: '¡Ve al grano! ¿Rompiste mi laptop?',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-7',
-        idiom: 'Hit the nail on the head',
-        literalTranslation: 'Golpear el clavo en la cabeza',
-        realMeaning: 'Dar en el clavo, acertar exactamente',
-        category: 'Día 3',
-        pronunciation: 'jit de neil on de jed',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "You hit the nail on the head! That's exactly the problem.",
-            pronunciation: 'yu jit de neil on de jed! dats exaktli de problem',
-            spanishExample:
-                '¡Diste en el clavo! Ese es exactamente el problema.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You hit the nail on the head! Good thinking!",
-            pronunciation: 'yu jit de neil on de jed! gud zinkin',
-            spanishExample: '¡Le atinaste! ¡Bien pensado!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "You hit the nail on the head, Mom. That's how I feel.",
-            pronunciation: 'yu jit de neil on de jed, mom. dats jau ai fil',
-            spanishExample: 'Diste en el clavo, mamá. Así es como me siento.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample:
-                "Wow, you hit the nail on the head with that guess!",
-            pronunciation: 'uau, yu jit de neil on de jed wid dat ges',
-            spanishExample: '¡Wow, le atinaste con esa adivinanza!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '3-8',
-        idiom: 'On cloud nine',
-        literalTranslation: 'En la nube nueve',
-        realMeaning: 'Estar extremadamente feliz',
-        category: 'Día 3',
-        pronunciation: 'on klaud nain',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "I'm on cloud nine! She said yes!",
-            pronunciation: 'aim on klaud nain! shi sed yes',
-            spanishExample: '¡Estoy en las nubes! ¡Ella dijo que sí!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You look on cloud nine today! What happened?",
-            pronunciation: 'yu luk on klaud nain tudei! wat japend',
-            spanishExample: '¡Te ves súper feliz hoy! ¿Qué pasó?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm on cloud nine, Mom! I got the job!",
-            pronunciation: 'aim on klaud nain, mom! ai got de yob',
-            spanishExample: '¡Estoy felicísimo, mamá! ¡Conseguí el trabajo!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample:
-                "He's been on cloud nine since he got that new bike.",
-            pronunciation: 'jis bin on klaud nain sins ji got dat niu baik',
-            spanishExample:
-                'Ha estado súper feliz desde que le dieron esa bici nueva.',
-          ),
-        ],
-      ),
-    ],
-    'Día 4': [
-      Phrase(
-        id: '4-1',
-        idiom: 'Best of both worlds',
-        literalTranslation: 'Lo mejor de ambos mundos',
-        realMeaning: 'Tener todas las ventajas',
-        category: 'Día 4',
-        pronunciation: 'best of boz werlds',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Working from home? Best of both worlds, man!",
-            pronunciation: 'workin from joum? best of boz werlds, man',
-            spanishExample: '¿Trabajar desde casa? ¡Lo mejor de todo, compa!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You get the best of both worlds with that game!",
-            pronunciation: 'yu get de best of boz werlds wid dat geim',
-            spanishExample: '¡Tienes lo mejor de todo con ese juego!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "This job gives me the best of both worlds, Dad.",
-            pronunciation: 'dis yob givs mi de best of boz werlds, dad',
-            spanishExample: 'Este trabajo me da lo mejor de ambos, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Living here is the best of both worlds!",
-            pronunciation: 'livin jir is de best of boz werlds',
-            spanishExample: '¡Vivir aquí es tener lo mejor de todo!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-2',
-        idiom: 'Back to square one',
-        literalTranslation: 'De vuelta al cuadro uno',
-        realMeaning: 'Volver a empezar desde el principio',
-        category: 'Día 4',
-        pronunciation: 'bak tu skwer wan',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "The plan failed. We're back to square one.",
-            pronunciation: 'de plan feild. wir bak tu skwer wan',
-            spanishExample: 'El plan falló. Volvemos a empezar.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Oops! Back to square one. Let's try again.",
-            pronunciation: 'ups! bak tu skwer wan. lets trai agen',
-            spanishExample: '¡Ups! De vuelta al inicio. Intentemos otra vez.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm back to square one with my project, Mom.",
-            pronunciation: 'aim bak tu skwer wan wid mai proyekt, mom',
-            spanishExample: 'Estoy de vuelta al inicio con mi proyecto, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "We lost the file. Back to square one!",
-            pronunciation: 'wi lost de fail. bak tu skwer wan',
-            spanishExample: 'Perdimos el archivo. ¡De vuelta a empezar!',
-          ),
-        ],
-      ),
-
-      // CONTINÚA DÍA 4...
-      Phrase(
-        id: '4-3',
-        idiom: 'Beat around the bush',
-        literalTranslation: 'Golpear alrededor del arbusto',
-        realMeaning: 'Evitar ir al punto directamente',
-        category: 'Día 4',
-        pronunciation: 'bit araund de bush',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Stop beating around the bush. Just tell me!",
-            pronunciation: 'stop bitin araund de bush. yast tel mi',
-            spanishExample: '¡Deja de dar rodeos! ¡Solo dime!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Don't beat around the bush. What do you want?",
-            pronunciation: 'dont bit araund de bush. wat du yu want',
-            spanishExample: 'No des vueltas. ¿Qué quieres?',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I won't beat around the bush, Dad. I need money.",
-            pronunciation: 'ai wont bit araund de bush, dad. ai nid moni',
-            spanishExample: 'No voy a dar rodeos, papá. Necesito dinero.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample:
-                "Stop beating around the bush! Did you eat my food?",
-            pronunciation: 'stop bitin araund de bush! did yu it mai fud',
-            spanishExample: '¡Deja de dar vueltas! ¿Te comiste mi comida?',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-4',
-        idiom: 'Blessing in disguise',
-        literalTranslation: 'Bendición disfrazada',
-        realMeaning: 'Algo malo que resulta ser bueno',
-        category: 'Día 4',
-        pronunciation: 'blesin in disgais',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Losing that job was a blessing in disguise.",
-            pronunciation: 'lusin dat yob was a blesin in disgais',
-            spanishExample: 'Perder ese trabajo fue una bendición disfrazada.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "It might be a blessing in disguise, sweetie.",
-            pronunciation: 'it mait bi a blesin in disgais, switi',
-            spanishExample: 'Puede que sea una bendición disfrazada, cariño.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "You were right, Mom. It was a blessing in disguise.",
-            pronunciation: 'yu wer rait, mom. it was a blesin in disgais',
-            spanishExample: 'Tenías razón, mamá. Fue una bendición disfrazada.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "That breakup was a blessing in disguise.",
-            pronunciation: 'dat breikap was a blesin in disgais',
-            spanishExample: 'Esa ruptura fue algo bueno al final.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-5',
-        idiom: 'Miss the boat',
-        literalTranslation: 'Perder el barco',
-        realMeaning: 'Perder una oportunidad',
-        category: 'Día 4',
-        pronunciation: 'mis de bout',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Hurry up or you'll miss the boat!",
-            pronunciation: 'jori ap or yul mis de bout',
-            spanishExample: '¡Apúrate o perderás la oportunidad!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Don't miss the boat on this chance!",
-            pronunciation: 'dont mis de bout on dis chans',
-            spanishExample: '¡No pierdas esta oportunidad!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I think I missed the boat, Dad.",
-            pronunciation: 'ai zink ai misd de bout, dad',
-            spanishExample: 'Creo que perdí la oportunidad, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "You missed the boat! The sale ended yesterday.",
-            pronunciation: 'yu misd de bout! de seil ended yesterdei',
-            spanishExample: '¡Perdiste la oportunidad! La oferta terminó ayer.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-6',
-        idiom: 'See eye to eye',
-        literalTranslation: 'Ver ojo a ojo',
-        realMeaning: 'Estar de acuerdo',
-        category: 'Día 4',
-        pronunciation: 'si ai tu ai',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "We don't always see eye to eye, but we're friends.",
-            pronunciation: 'wi dont olweis si ai tu ai, bat wir frends',
-            spanishExample: 'No siempre estamos de acuerdo, pero somos amigos.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "We need to see eye to eye on this.",
-            pronunciation: 'wi nid tu si ai tu ai on dis',
-            spanishExample: 'Necesitamos estar de acuerdo en esto.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I know we don't see eye to eye, Mom.",
-            pronunciation: 'ai nou wi dont si ai tu ai, mom',
-            spanishExample: 'Sé que no estamos de acuerdo, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Finally, we see eye to eye on something!",
-            pronunciation: 'fainali, wi si ai tu ai on samzin',
-            spanishExample: '¡Finalmente estamos de acuerdo en algo!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-7',
-        idiom: 'The last straw',
-        literalTranslation: 'La última paja',
-        realMeaning: 'La gota que derramó el vaso',
-        category: 'Día 4',
-        pronunciation: 'de last stro',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "That was the last straw! I'm done with him.",
-            pronunciation: 'dat was de last stro! aim dan wid jim',
-            spanishExample:
-                '¡Esa fue la gota que derramó el vaso! Ya no más con él.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "This is the last straw! No more video games!",
-            pronunciation: 'dis is de last stro! nou mor video geims',
-            spanishExample: '¡Esto es el colmo! ¡No más videojuegos!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "That was the last straw, Mom. I'm quitting.",
-            pronunciation: 'dat was de last stro, mom. aim kwitin',
-            spanishExample:
-                'Esa fue la gota que derramó el vaso, mamá. Renuncio.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "That's the last straw! Give me back my stuff!",
-            pronunciation: 'dats de last stro! giv mi bak mai staf',
-            spanishExample: '¡Eso es el colmo! ¡Devuélveme mis cosas!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '4-8',
-        idiom: 'Pull yourself together',
-        literalTranslation: 'Jálate a ti mismo juntos',
-        realMeaning: 'Cálmate y contrólate',
-        category: 'Día 4',
-        pronunciation: 'pul iorself tugeder',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Pull yourself together, man! You got this!",
-            pronunciation: 'pul iorself tugeder, man! yu got dis',
-            spanishExample: '¡Cálmate, compa! ¡Tú puedes!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Pull yourself together. It's just a small cut.",
-            pronunciation: 'pul iorself tugeder. its yast a smol kat',
-            spanishExample: 'Cálmate. Es solo un cortecito.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "I need to pull myself together before the interview.",
-            pronunciation: 'ai nid tu pul maiself tugeder bifor de interviu',
-            spanishExample: 'Necesito calmarme antes de la entrevista.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Pull yourself together! Stop crying over that!",
-            pronunciation: 'pul iorself tugeder! stop kraiin over dat',
-            spanishExample: '¡Contrólate! ¡Deja de llorar por eso!',
-          ),
-        ],
-      ),
-    ],
-    'Día 5': [
-      Phrase(
-        id: '5-1',
-        idiom: 'Go the extra mile',
-        literalTranslation: 'Ir la milla extra',
-        realMeaning: 'Esforzarse más de lo necesario',
-        category: 'Día 5',
-        pronunciation: 'gou de extra mail',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "He always goes the extra mile to help us.",
-            pronunciation: 'ji olweis gous de extra mail tu jelp as',
-            spanishExample: 'Él siempre se esfuerza de más para ayudarnos.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "You went the extra mile on this project!",
-            pronunciation: 'yu went de extra mail on dis proyekt',
-            spanishExample: '¡Te esforzaste mucho en este proyecto!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I want to go the extra mile at work, Mom.",
-            pronunciation: 'ai want tu gou de extra mail at werk, mom',
-            spanishExample: 'Quiero esforzarme más en el trabajo, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Thanks for going the extra mile for me!",
-            pronunciation: 'zanks for gouin de extra mail for mi',
-            spanishExample: '¡Gracias por esforzarte tanto por mí!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-2',
-        idiom: 'Keep your chin up',
-        literalTranslation: 'Mantén tu barbilla arriba',
-        realMeaning: 'Mantente positivo',
-        category: 'Día 5',
-        pronunciation: 'kip ior chin ap',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Keep your chin up, buddy! Things will get better.",
-            pronunciation: 'kip ior chin ap, badi! zings wil get beter',
-            spanishExample: '¡Mantente positivo, compa! Las cosas mejorarán.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Keep your chin up! You'll do better next time.",
-            pronunciation: 'kip ior chin ap! yul du beter next taim',
-            spanishExample: '¡No te desanimes! Lo harás mejor la próxima.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Thanks, Dad. I'll try to keep my chin up.",
-            pronunciation: 'zanks, dad. ail trai tu kip mai chin ap',
-            spanishExample: 'Gracias, papá. Trataré de mantenerme positivo.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Keep your chin up! You passed the test!",
-            pronunciation: 'kip ior chin ap! yu pasd de test',
-            spanishExample: '¡Anímate! ¡Pasaste el examen!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-3',
-        idiom: 'Hang in there',
-        literalTranslation: 'Cuelga ahí',
-        realMeaning: 'No te rindas, aguanta',
-        category: 'Día 5',
-        pronunciation: 'jang in der',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Hang in there, man! Just one more week!",
-            pronunciation: 'jang in der, man! yast wan mor wik',
-            spanishExample: '¡Aguanta, compa! ¡Solo una semana más!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Hang in there! We're almost home.",
-            pronunciation: 'jang in der! wir olmost joum',
-            spanishExample: '¡Aguanta! Ya casi llegamos a casa.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "I'm trying to hang in there, Mom.",
-            pronunciation: 'aim traiin tu jang in der, mom',
-            spanishExample: 'Estoy tratando de aguantar, mamá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Hang in there! You're doing great!",
-            pronunciation: 'jang in der! yor duin greit',
-            spanishExample: '¡Aguanta! ¡Lo estás haciendo genial!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-4',
-        idiom: 'Speak of the devil',
-        literalTranslation: 'Hablar del diablo',
-        realMeaning: 'Hablando del rey de Roma',
-        category: 'Día 5',
-        pronunciation: 'spik of de devil',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "Speak of the devil! We were just talking about you!",
-            pronunciation: 'spik of de devil! wi wer yast tokin abaut yu',
-            spanishExample:
-                '¡Hablando del rey de Roma! ¡Justo hablábamos de ti!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Speak of the devil! Here you are!",
-            pronunciation: 'spik of de devil! jir yu ar',
-            spanishExample: '¡Hablando del rey de Roma! ¡Aquí estás!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Speak of the devil, Mom! Dad just texted.",
-            pronunciation: 'spik of de devil, mom! dad yast texted',
-            spanishExample:
-                '¡Hablando del rey de Roma, mamá! Papá acaba de escribir.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Speak of the devil! I was calling you!",
-            pronunciation: 'spik of de devil! ai was kolin yu',
-            spanishExample: '¡Hablando de ti! ¡Te estaba llamando!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-5',
-        idiom: 'The whole nine yards',
-        literalTranslation: 'Las nueve yardas completas',
-        realMeaning: 'Todo completo, sin excepción',
-        category: 'Día 5',
-        pronunciation: 'de joul nain yards',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample:
-                "He got a new car, new house, the whole nine yards!",
-            pronunciation: 'ji got a niu kar, niu jaus, de joul nain yards',
-            spanishExample:
-                '¡Consiguió carro nuevo, casa nueva, todo completo!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample:
-                "We're doing the whole nine yards for your birthday!",
-            pronunciation: 'wir duin de joul nain yards for yor berzdei',
-            spanishExample: '¡Vamos a hacer todo por tu cumpleaños!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample:
-                "She got the promotion, raise, the whole nine yards!",
-            pronunciation: 'shi got de promoushon, reis, de joul nain yards',
-            spanishExample: '¡Consiguió el ascenso, aumento, todo!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample:
-                "He went all out - decorations, food, the whole nine yards!",
-            pronunciation:
-                'ji went ol aut - dekoreishons, fud, de joul nain yards',
-            spanishExample: '¡Se lució - decoraciones, comida, todo!',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-6',
-        idiom: 'Time flies',
-        literalTranslation: 'El tiempo vuela',
-        realMeaning: 'El tiempo pasa rápido',
-        category: 'Día 5',
-        pronunciation: 'taim flais',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Wow, time flies! It's already midnight!",
-            pronunciation: 'uau, taim flais! its olredi midnait',
-            spanishExample: '¡Wow, el tiempo vuela! ¡Ya es medianoche!',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Time flies when you're having fun!",
-            pronunciation: 'taim flais wen yor javin fan',
-            spanishExample: '¡El tiempo vuela cuando te diviertes!',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "Time flies, Mom. I can't believe I'm graduating!",
-            pronunciation: 'taim flais, mom. ai kant biliv aim gradueitin',
-            spanishExample:
-                'El tiempo vuela, mamá. ¡No puedo creer que me gradúo!',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Time flies! Remember when we were kids?",
-            pronunciation: 'taim flais! rimember wen wi wer kids',
-            spanishExample: '¡El tiempo vuela! ¿Recuerdas cuando éramos niños?',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-7',
-        idiom: 'Up in the air',
-        literalTranslation: 'Arriba en el aire',
-        realMeaning: 'Incierto, sin decidir',
-        category: 'Día 5',
-        pronunciation: 'ap in de er',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "Our plans are still up in the air.",
-            pronunciation: 'aur plans ar stil ap in de er',
-            spanishExample: 'Nuestros planes todavía están en el aire.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "The trip is up in the air right now.",
-            pronunciation: 'de trip is ap in de er rait nau',
-            spanishExample: 'El viaje está en el aire por ahora.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "My job situation is up in the air, Dad.",
-            pronunciation: 'mai yob situeishon is ap in de er, dad',
-            spanishExample: 'Mi situación laboral está incierta, papá.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "Everything is up in the air right now.",
-            pronunciation: 'evrizin is ap in de er rait nau',
-            spanishExample: 'Todo está incierto ahorita.',
-          ),
-        ],
-      ),
-      Phrase(
-        id: '5-8',
-        idiom: 'Weather the storm',
-        literalTranslation: 'Capear la tormenta',
-        realMeaning: 'Superar una situación difícil',
-        category: 'Día 5',
-        pronunciation: 'weder de storm',
-        contextExamples: [
-          ContextExample(
-            emoji: '👬',
-            context: 'Con amigos',
-            englishExample: "We'll weather the storm together, bro.",
-            pronunciation: 'wil weder de storm tugeder, bro',
-            spanishExample: 'Superaremos esta tormenta juntos, bro.',
-          ),
-          ContextExample(
-            emoji: '👶',
-            context: 'Con hijos',
-            englishExample: "Don't worry, we'll weather the storm.",
-            pronunciation: 'dont wori, wil weder de storm',
-            spanishExample: 'No te preocupes, superaremos esto.',
-          ),
-          ContextExample(
-            emoji: '👨‍👩‍👦',
-            context: 'Con papás',
-            englishExample: "We weathered the storm, Mom. We're okay now.",
-            pronunciation: 'wi wederd de storm, mom. wir okey nau',
-            spanishExample: 'Superamos la tormenta, mamá. Ya estamos bien.',
-          ),
-          ContextExample(
-            emoji: '🧑‍🤝‍🧑',
-            context: 'Con hermanos',
-            englishExample: "We've weathered worse storms than this!",
-            pronunciation: 'wiv wederd wers storms dan dis',
-            spanishExample: '¡Hemos superado tormentas peores que esta!',
-          ),
-        ],
-      ),
-    ],
+    'Nivel 1': Day15DataSource.getPhrases(),
+    'Nivel 2': Day17DataSource.getPhrases(),
+    'Nivel 3': Day24DataSource.getPhrases(),
+    'Nivel 4': Day81DataSource.getPhrases(),
+    'Nivel 5': Day2DataSource.getPhrases(),
+    'Nivel 6': Day28DataSource.getPhrases(),
+    'Nivel 7': Day4DataSource.getPhrases(),
+    'Nivel 8': Day48DataSource.getPhrases(),
+    'Nivel 9': Day49DataSource.getPhrases(),
+    'Nivel 10': Day50DataSource.getPhrases(),
+    'Nivel 11': Day68DataSource.getPhrases(),
+    'Nivel 12': Day71DataSource.getPhrases(),
+    'Nivel 13': Day72DataSource.getPhrases(),
+    'Nivel 14': Day73DataSource.getPhrases(),
+    'Nivel 15': Day74DataSource.getPhrases(),
+    'Nivel 16': Day26DataSource.getPhrases(),
+    'Nivel 17': Day70DataSource.getPhrases(),
+    'Nivel 18': Day8DataSource.getPhrases(),
+    'Nivel 19': Day16DataSource.getPhrases(),
+    'Nivel 20': Day19DataSource.getPhrases(),
+    'Nivel 21': Day45DataSource.getPhrases(),
+    'Nivel 22': Day30DataSource.getPhrases(),
+    'Nivel 23': Day5DataSource.getPhrases(),
+    'Nivel 24': Day63DataSource.getPhrases(),
+    'Nivel 25': Day64DataSource.getPhrases(),
+    'Nivel 26': Day69DataSource.getPhrases(),
+    'Nivel 27': Day13DataSource.getPhrases(),
+    'Nivel 28': Day76DataSource.getPhrases(),
+    'Nivel 29': Day20DataSource.getPhrases(),
+    'Nivel 30': Day23DataSource.getPhrases(),
+    'Nivel 31': Day47DataSource.getPhrases(),
+    'Nivel 32': Day18DataSource.getPhrases(),
+    'Nivel 33': Day21DataSource.getPhrases(),
+    'Nivel 34': Day40DataSource.getPhrases(),
+    'Nivel 35': Day75DataSource.getPhrases(),
+    'Nivel 36': Day87DataSource.getPhrases(),
+    'Nivel 37': Day39DataSource.getPhrases(),
+    'Nivel 38': Day61DataSource.getPhrases(),
+    'Nivel 39': Day62DataSource.getPhrases(),
+    'Nivel 40': Day34DataSource.getPhrases(),
+    'Nivel 41': Day37DataSource.getPhrases(),
+    'Nivel 42': Day38DataSource.getPhrases(),
+    'Nivel 43': Day41DataSource.getPhrases(),
+    'Nivel 44': Day57DataSource.getPhrases(),
+    'Nivel 45': Day65DataSource.getPhrases(),
+    'Nivel 46': Day66DataSource.getPhrases(),
+    'Nivel 47': Day55DataSource.getPhrases(),
+    'Nivel 48': Day89DataSource.getPhrases(),
+    'Nivel 49': Day31DataSource.getPhrases(),
+    'Nivel 50': Day51DataSource.getPhrases(),
+    'Nivel 51': Day54DataSource.getPhrases(),
+    'Nivel 52': Day56DataSource.getPhrases(),
+    'Nivel 53': Day58DataSource.getPhrases(),
+    'Nivel 54': Day6DataSource.getPhrases(),
+    'Nivel 55': Day1DataSource.getPhrases(),
+    'Nivel 56': Day22DataSource.getPhrases(),
+    'Nivel 57': Day25DataSource.getPhrases(),
+    'Nivel 58': Day85DataSource.getPhrases(),
+    'Nivel 59': Day11DataSource.getPhrases(),
+    'Nivel 60': Day52DataSource.getPhrases(),
+    'Nivel 61': Day98DataSource.getPhrases(),
+    'Nivel 62': Day10DataSource.getPhrases(),
+    'Nivel 63': Day33DataSource.getPhrases(),
+    'Nivel 64': Day53DataSource.getPhrases(),
+    'Nivel 65': Day60DataSource.getPhrases(),
+    'Nivel 66': Day32DataSource.getPhrases(),
+    'Nivel 67': Day46DataSource.getPhrases(),
+    'Nivel 68': Day77DataSource.getPhrases(),
+    'Nivel 69': Day82DataSource.getPhrases(),
+    'Nivel 70': Day83DataSource.getPhrases(),
+    'Nivel 71': Day88DataSource.getPhrases(),
+    'Nivel 72': Day90DataSource.getPhrases(),
+    'Nivel 73': Day27DataSource.getPhrases(),
+    'Nivel 74': Day67DataSource.getPhrases(),
+    'Nivel 75': Day79DataSource.getPhrases(),
+    'Nivel 76': Day9DataSource.getPhrases(),
+    'Nivel 77': Day93DataSource.getPhrases(),
+    'Nivel 78': Day44DataSource.getPhrases(),
+    'Nivel 79': Day84DataSource.getPhrases(),
+    'Nivel 80': Day96DataSource.getPhrases(),
+    'Nivel 81': Day3DataSource.getPhrases(),
+    'Nivel 82': Day35DataSource.getPhrases(),
+    'Nivel 83': Day43DataSource.getPhrases(),
+    'Nivel 84': Day78DataSource.getPhrases(),
+    'Nivel 85': Day100DataSource.getPhrases(),
+    'Nivel 86': Day36DataSource.getPhrases(),
+    'Nivel 87': Day7DataSource.getPhrases(),
+    'Nivel 88': Day86DataSource.getPhrases(),
+    'Nivel 89': Day91DataSource.getPhrases(),
+    'Nivel 90': Day92DataSource.getPhrases(),
+    'Nivel 91': Day94DataSource.getPhrases(),
+    'Nivel 92': Day97DataSource.getPhrases(),
+    'Nivel 93': Day80DataSource.getPhrases(),
+    'Nivel 94': Day12DataSource.getPhrases(),
+    'Nivel 95': Day99DataSource.getPhrases(),
+    'Nivel 96': Day59DataSource.getPhrases(),
+    'Nivel 97': Day29DataSource.getPhrases(),
+    'Nivel 98': Day42DataSource.getPhrases(),
+    'Nivel 99': Day95DataSource.getPhrases(),
+    'Nivel 100': Day14DataSource.getPhrases(),
   };
 
-  // SECCIÓN DE DAILY CHALLENGES Y MÉTODOS - NO TOCAR
+  // Mapa de desafíos diarios
   final Map<String, String> _dailyChallenges = {
-    'Día 1': '''
-🎯 DESAFÍO DEL DÍA 1 - Rutina y Sueño
-
-¡Felicidades por aprender 8 idioms sobre rutina diaria! Ahora es momento de practicar.
-
-📝 TU RETO: Usa cada idiom AL MENOS UNA VEZ hoy
-
-💡 EJEMPLOS DE USO:
-
-- "Hit the hay" → Díselo a tu familia antes de dormir
-- "Rise and shine" → Despierta a alguien con energía
-- "Catch some Z's" → Menciona que necesitas dormir
-- "Sleep like a log" → Cuenta cómo dormiste
-- "Call it a day" → Termina tu trabajo y dilo
-- "Burn the midnight oil" → Habla de trabajar tarde
-- "Early bird catches the worm" → Motiva a alguien
-- "Hit the sack" → Despídete antes de dormir
-
-✅ Marca cada idiom cuando lo uses en la vida real
-🔓 Completa todas para desbloquear el Día 2
-''',
-    'Día 2': '''
-🎯 DESAFÍO DEL DÍA 2 - Situaciones Cotidianas
-
-¡Excelente progreso! Hoy practicarás idioms de uso común.
-
-📝 TU RETO: Usa cada idiom AL MENOS UNA VEZ hoy
-
-💡 EJEMPLOS DE USO:
-
-- "Piece of cake" → Comenta algo fácil
-- "Spill the beans" → Habla de revelar secretos
-- "Break the ice" → Inicia una conversación
-- "Cost an arm and a leg" → Habla de algo caro
-- "Under the weather" → Menciona cómo te sientes
-- "Once in a blue moon" → Describe algo raro
-- "Let the cat out of the bag" → Cuenta un secreto
-- "Bite the bullet" → Enfrenta algo difícil
-
-✅ Marca cada idiom cuando lo uses en la vida real
-🔓 Completa todas para desbloquear el Día 3
-''',
-    'Día 3': '''
-🎯 DESAFÍO DEL DÍA 3 - Expresiones y Emociones
-
-¡Vas muy bien! Hoy practicarás expresiones emocionales.
-
-📝 TU RETO: Usa cada idiom AL MENOS UNA VEZ hoy
-
-💡 EJEMPLOS DE USO:
-
-- "Break a leg" → Desea suerte a alguien
-- "When pigs fly" → Habla de algo imposible
-- "Get cold feet" → Menciona nervios
-- "Barking up the wrong tree" → Corrige a alguien
-- "The ball is in your court" → Da turno a otro
-- "Cut to the chase" → Ve directo al punto
-- "Hit the nail on the head" → Reconoce un acierto
-- "On cloud nine" → Expresa felicidad
-
-✅ Marca cada idiom cuando lo uses en la vida real
-🔓 Completa todas para desbloquear el Día 4
-''',
-    'Día 4': '''
-🎯 DESAFÍO DEL DÍA 4 - Relaciones y Decisiones
-
-¡Impresionante! Hoy practicarás idioms de situaciones sociales.
-
-📝 TU RETO: Usa cada idiom AL MENOS UNA VEZ hoy
-
-💡 EJEMPLOS DE USO:
-
-- "Best of both worlds" → Habla de ventajas
-- "Back to square one" → Menciona reiniciar
-- "Beat around the bush" → Pide ir al grano
-- "Blessing in disguise" → Encuentra lo positivo
-- "Miss the boat" → Habla de oportunidades
-- "See eye to eye" → Menciona acuerdos
-- "The last straw" → Expresa tu límite
-- "Pull yourself together" → Anima a alguien
-
-✅ Marca cada idiom cuando lo uses en la vida real
-🔓 Completa todas para desbloquear el Día 5
-''',
-    'Día 5': '''
-🎯 DESAFÍO DEL DÍA 5 - Motivación y Vida
-
-¡Último día! Hoy practicarás idioms motivacionales.
-
-📝 TU RETO: Usa cada idiom AL MENOS UNA VEZ hoy
-
-💡 EJEMPLOS DE USO:
-
-- "Go the extra mile" → Reconoce esfuerzos
-- "Keep your chin up" → Anima a alguien
-- "Hang in there" → Motiva a perseverar
-- "Speak of the devil" → Usa al llegar alguien
-- "The whole nine yards" → Habla de hacer todo
-- "Time flies" → Comenta el paso del tiempo
-- "Up in the air" → Menciona incertidumbre
-- "Weather the storm" → Habla de superar
-
-✅ Marca cada idiom cuando lo uses en la vida real
-
-🎉 ¡FELICIDADES! Completaste tu primera semana aprendiendo idioms
-''',
+    'Nivel 1': Day15DataSource.getDailyChallenge(),
+    'Nivel 2': Day17DataSource.getDailyChallenge(),
+    'Nivel 3': Day24DataSource.getDailyChallenge(),
+    'Nivel 4': Day81DataSource.getDailyChallenge(),
+    'Nivel 5': Day2DataSource.getDailyChallenge(),
+    'Nivel 6': Day28DataSource.getDailyChallenge(),
+    'Nivel 7': Day4DataSource.getDailyChallenge(),
+    'Nivel 8': Day48DataSource.getDailyChallenge(),
+    'Nivel 9': Day49DataSource.getDailyChallenge(),
+    'Nivel 10': Day50DataSource.getDailyChallenge(),
+    'Nivel 11': Day68DataSource.getDailyChallenge(),
+    'Nivel 12': Day71DataSource.getDailyChallenge(),
+    'Nivel 13': Day72DataSource.getDailyChallenge(),
+    'Nivel 14': Day73DataSource.getDailyChallenge(),
+    'Nivel 15': Day74DataSource.getDailyChallenge(),
+    'Nivel 16': Day26DataSource.getDailyChallenge(),
+    'Nivel 17': Day70DataSource.getDailyChallenge(),
+    'Nivel 18': Day8DataSource.getDailyChallenge(),
+    'Nivel 19': Day16DataSource.getDailyChallenge(),
+    'Nivel 20': Day19DataSource.getDailyChallenge(),
+    'Nivel 21': Day45DataSource.getDailyChallenge(),
+    'Nivel 22': Day30DataSource.getDailyChallenge(),
+    'Nivel 23': Day5DataSource.getDailyChallenge(),
+    'Nivel 24': Day63DataSource.getDailyChallenge(),
+    'Nivel 25': Day64DataSource.getDailyChallenge(),
+    'Nivel 26': Day69DataSource.getDailyChallenge(),
+    'Nivel 27': Day13DataSource.getDailyChallenge(),
+    'Nivel 28': Day76DataSource.getDailyChallenge(),
+    'Nivel 29': Day20DataSource.getDailyChallenge(),
+    'Nivel 30': Day23DataSource.getDailyChallenge(),
+    'Nivel 31': Day47DataSource.getDailyChallenge(),
+    'Nivel 32': Day18DataSource.getDailyChallenge(),
+    'Nivel 33': Day21DataSource.getDailyChallenge(),
+    'Nivel 34': Day40DataSource.getDailyChallenge(),
+    'Nivel 35': Day75DataSource.getDailyChallenge(),
+    'Nivel 36': Day87DataSource.getDailyChallenge(),
+    'Nivel 37': Day39DataSource.getDailyChallenge(),
+    'Nivel 38': Day61DataSource.getDailyChallenge(),
+    'Nivel 39': Day62DataSource.getDailyChallenge(),
+    'Nivel 40': Day34DataSource.getDailyChallenge(),
+    'Nivel 41': Day37DataSource.getDailyChallenge(),
+    'Nivel 42': Day38DataSource.getDailyChallenge(),
+    'Nivel 43': Day41DataSource.getDailyChallenge(),
+    'Nivel 44': Day57DataSource.getDailyChallenge(),
+    'Nivel 45': Day65DataSource.getDailyChallenge(),
+    'Nivel 46': Day66DataSource.getDailyChallenge(),
+    'Nivel 47': Day55DataSource.getDailyChallenge(),
+    'Nivel 48': Day89DataSource.getDailyChallenge(),
+    'Nivel 49': Day31DataSource.getDailyChallenge(),
+    'Nivel 50': Day51DataSource.getDailyChallenge(),
+    'Nivel 51': Day54DataSource.getDailyChallenge(),
+    'Nivel 52': Day56DataSource.getDailyChallenge(),
+    'Nivel 53': Day58DataSource.getDailyChallenge(),
+    'Nivel 54': Day6DataSource.getDailyChallenge(),
+    'Nivel 55': Day1DataSource.getDailyChallenge(),
+    'Nivel 56': Day22DataSource.getDailyChallenge(),
+    'Nivel 57': Day25DataSource.getDailyChallenge(),
+    'Nivel 58': Day85DataSource.getDailyChallenge(),
+    'Nivel 59': Day11DataSource.getDailyChallenge(),
+    'Nivel 60': Day52DataSource.getDailyChallenge(),
+    'Nivel 61': Day98DataSource.getDailyChallenge(),
+    'Nivel 62': Day10DataSource.getDailyChallenge(),
+    'Nivel 63': Day33DataSource.getDailyChallenge(),
+    'Nivel 64': Day53DataSource.getDailyChallenge(),
+    'Nivel 65': Day60DataSource.getDailyChallenge(),
+    'Nivel 66': Day32DataSource.getDailyChallenge(),
+    'Nivel 67': Day46DataSource.getDailyChallenge(),
+    'Nivel 68': Day77DataSource.getDailyChallenge(),
+    'Nivel 69': Day82DataSource.getDailyChallenge(),
+    'Nivel 70': Day83DataSource.getDailyChallenge(),
+    'Nivel 71': Day88DataSource.getDailyChallenge(),
+    'Nivel 72': Day90DataSource.getDailyChallenge(),
+    'Nivel 73': Day27DataSource.getDailyChallenge(),
+    'Nivel 74': Day67DataSource.getDailyChallenge(),
+    'Nivel 75': Day79DataSource.getDailyChallenge(),
+    'Nivel 76': Day9DataSource.getDailyChallenge(),
+    'Nivel 77': Day93DataSource.getDailyChallenge(),
+    'Nivel 78': Day44DataSource.getDailyChallenge(),
+    'Nivel 79': Day84DataSource.getDailyChallenge(),
+    'Nivel 80': Day96DataSource.getDailyChallenge(),
+    'Nivel 81': Day3DataSource.getDailyChallenge(),
+    'Nivel 82': Day35DataSource.getDailyChallenge(),
+    'Nivel 83': Day43DataSource.getDailyChallenge(),
+    'Nivel 84': Day78DataSource.getDailyChallenge(),
+    'Nivel 85': Day100DataSource.getDailyChallenge(),
+    'Nivel 86': Day36DataSource.getDailyChallenge(),
+    'Nivel 87': Day7DataSource.getDailyChallenge(),
+    'Nivel 88': Day86DataSource.getDailyChallenge(),
+    'Nivel 89': Day91DataSource.getDailyChallenge(),
+    'Nivel 90': Day92DataSource.getDailyChallenge(),
+    'Nivel 91': Day94DataSource.getDailyChallenge(),
+    'Nivel 92': Day97DataSource.getDailyChallenge(),
+    'Nivel 93': Day80DataSource.getDailyChallenge(),
+    'Nivel 94': Day12DataSource.getDailyChallenge(),
+    'Nivel 95': Day99DataSource.getDailyChallenge(),
+    'Nivel 96': Day59DataSource.getDailyChallenge(),
+    'Nivel 97': Day29DataSource.getDailyChallenge(),
+    'Nivel 98': Day42DataSource.getDailyChallenge(),
+    'Nivel 99': Day95DataSource.getDailyChallenge(),
+    'Nivel 100': Day14DataSource.getDailyChallenge(),
   };
 
   @override
   List<CategoryModel> getCategories() {
-    return const [
-      CategoryModel(name: 'Día 1', icon: Icons.looks_one),
-      CategoryModel(name: 'Día 2', icon: Icons.looks_two),
-      CategoryModel(name: 'Día 3', icon: Icons.looks_3),
-      CategoryModel(name: 'Día 4', icon: Icons.looks_4),
-      CategoryModel(name: 'Día 5', icon: Icons.looks_5),
-    ];
+    // Generar 100 categorías dinámicamente
+    return List.generate(100, (index) {
+      final dayNumber = index + 1;
+      IconData icon;
+
+      // Asignar iconos específicos para los primeros días
+      if (dayNumber == 1) {
+        icon = Icons.looks_one;
+      } else if (dayNumber == 2) {
+        icon = Icons.looks_two;
+      } else if (dayNumber == 3) {
+        icon = Icons.looks_3;
+      } else if (dayNumber == 4) {
+        icon = Icons.looks_4;
+      } else if (dayNumber == 5) {
+        icon = Icons.looks_5;
+      } else if (dayNumber == 6) {
+        icon = Icons.looks_6;
+      } else {
+        icon = Icons.calendar_today;
+      }
+
+      return CategoryModel(name: 'Nivel $dayNumber', icon: icon);
+    });
   }
 
   @override

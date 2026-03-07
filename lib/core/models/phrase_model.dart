@@ -24,6 +24,7 @@ class Phrase {
   // Para compatibilidad con código existente
   String get english => idiom;
   String get spanish => realMeaning;
+  int get index => int.tryParse(id.split('-').last) ?? 0;
 
   // Convertir de Model a Entity
   PhraseEntity toEntity() {
@@ -64,16 +65,27 @@ class Phrase {
   };
 
   factory Phrase.fromJson(Map<String, dynamic> json) => Phrase(
-    id: json['id'],
-    idiom: json['idiom'],
-    literalTranslation: json['literalTranslation'],
-    realMeaning: json['realMeaning'],
-    category: json['category'],
-    pronunciation: json['pronunciation'],
-    contextExamples: (json['contextExamples'] as List)
-        .map((e) => ContextExample.fromJson(e))
-        .toList(),
+    id: json['id'] ?? '',
+    idiom: json['idiom'] ?? '',
+    literalTranslation: json['literalTranslation'] ?? '',
+    realMeaning: json['realMeaning'] ?? '',
+    category: json['category'] ?? '',
+    pronunciation: json['pronunciation'] ?? '',
+    contextExamples: json['contextExamples'] != null
+        ? (json['contextExamples'] as List)
+              .map((e) => ContextExample.fromJson(e))
+              .toList()
+        : [],
   );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Phrase && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class ContextExample {
@@ -81,36 +93,35 @@ class ContextExample {
   final String context;
   final String englishExample;
   final String spanishExample;
-  final String pronunciation; // ← CAMBIO: Ahora es un campo final normal
+  final String pronunciation;
 
   ContextExample({
     required this.emoji,
     required this.context,
     required this.englishExample,
     required this.spanishExample,
-    required this.pronunciation, // ← CAMBIO: Ya no pone String antes
+    required this.pronunciation,
   });
 
-  // Convertir de Model a Entity
+  // Convertir a Entity
   ContextExampleEntity toEntity() {
     return ContextExampleEntity(
       emoji: emoji,
       context: context,
       englishExample: englishExample,
       spanishExample: spanishExample,
-      pronunciation: pronunciation, // ← CAMBIO: Usa el campo real
+      pronunciation: pronunciation,
     );
   }
 
-  // Convertir de Entity a Model
+  // Crear desde Entity
   factory ContextExample.fromEntity(ContextExampleEntity entity) {
     return ContextExample(
       emoji: entity.emoji,
       context: entity.context,
       englishExample: entity.englishExample,
       spanishExample: entity.spanishExample,
-      pronunciation:
-          entity.pronunciation, // ← CAMBIO: Usa el campo de la entity
+      pronunciation: entity.pronunciation,
     );
   }
 
@@ -119,7 +130,7 @@ class ContextExample {
     'context': context,
     'englishExample': englishExample,
     'spanishExample': spanishExample,
-    'pronunciation': pronunciation, // ← CAMBIO: Incluido en toJson
+    'pronunciation': pronunciation,
   };
 
   factory ContextExample.fromJson(Map<String, dynamic> json) => ContextExample(
@@ -127,6 +138,25 @@ class ContextExample {
     context: json['context'] ?? '',
     englishExample: json['englishExample'] ?? '',
     spanishExample: json['spanishExample'] ?? '',
-    pronunciation: json['pronunciation'] ?? '', // ← CAMBIO: Lee del json
+    pronunciation: json['pronunciation'] ?? '',
   );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ContextExample &&
+        other.emoji == emoji &&
+        other.context == context &&
+        other.englishExample == englishExample &&
+        other.spanishExample == spanishExample &&
+        other.pronunciation == pronunciation;
+  }
+
+  @override
+  int get hashCode =>
+      emoji.hashCode ^
+      context.hashCode ^
+      englishExample.hashCode ^
+      spanishExample.hashCode ^
+      pronunciation.hashCode;
 }

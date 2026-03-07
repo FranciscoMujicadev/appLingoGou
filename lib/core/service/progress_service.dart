@@ -26,13 +26,16 @@ class ProgressService {
   }
 
   Map<String, DayProgressModel> _initializeProgress() {
-    return {
-      'Día 1': const DayProgressModel(dayId: 'Día 1', isUnlocked: true),
-      'Día 2': const DayProgressModel(dayId: 'Día 2'),
-      'Día 3': const DayProgressModel(dayId: 'Día 3'),
-      'Día 4': const DayProgressModel(dayId: 'Día 4'),
-      'Día 5': const DayProgressModel(dayId: 'Día 5'),
-    };
+    final progress = <String, DayProgressModel>{};
+
+    for (int i = 1; i <= 100; i++) {
+      progress['Nivel $i'] = DayProgressModel(
+        dayId: 'Nivel $i',
+        isUnlocked: i == 1, // Solo el nivel 1 desbloqueado
+      );
+    }
+
+    return progress;
   }
 
   Future<void> saveProgress(Map<String, DayProgressModel> progress) async {
@@ -74,9 +77,9 @@ class ProgressService {
       completedAt: DateTime.now(),
     );
 
-    final dayNumber = int.tryParse(dayId.replaceAll('Día ', ''));
-    if (dayNumber != null && dayNumber < 5) {
-      final nextDayId = 'Día ${dayNumber + 1}';
+    final dayNumber = int.tryParse(dayId.replaceAll('Nivel ', ''));
+    if (dayNumber != null && dayNumber < 100) {
+      final nextDayId = 'Nivel ${dayNumber + 1}';
       final nextDay = progress[nextDayId];
       if (nextDay != null) {
         progress[nextDayId] = nextDay.copyWith(isUnlocked: true);
@@ -103,8 +106,9 @@ class ProgressService {
   Future<String> getFirstUnlockedDay() async {
     final progress = await getProgress();
 
-    for (var i = 1; i <= 5; i++) {
-      final dayId = 'Día $i';
+    // CAMBIO AQUÍ: Buscar entre 7 días
+    for (var i = 1; i <= 100; i++) {
+      final dayId = 'Nivel $i';
       final dayProgress = progress[dayId];
       if (dayProgress != null &&
           dayProgress.isUnlocked &&
@@ -113,7 +117,7 @@ class ProgressService {
       }
     }
 
-    return 'Día 1';
+    return 'Nivel 1';
   }
 
   Future<void> completeDayAndUnlockNext(String currentDay) async {
@@ -122,16 +126,16 @@ class ProgressService {
 
     if (dayProgress == null) return;
 
-    // Marcar día como completado
+    // Marcar nivel como completado
     progress[currentDay] = dayProgress.copyWith(
       isCompleted: true,
       completedAt: DateTime.now(),
     );
 
-    // Desbloquear siguiente día
-    final dayNumber = int.tryParse(currentDay.replaceAll('Día ', ''));
-    if (dayNumber != null && dayNumber < 5) {
-      final nextDayId = 'Día ${dayNumber + 1}';
+    // CAMBIO AQUÍ: Ahora permite hasta 7 días
+    final dayNumber = int.tryParse(currentDay.replaceAll('Nivel ', ''));
+    if (dayNumber != null && dayNumber < 100) {
+      final nextDayId = 'Nivel ${dayNumber + 1}';
       final nextDay = progress[nextDayId];
       if (nextDay != null) {
         progress[nextDayId] = nextDay.copyWith(isUnlocked: true);

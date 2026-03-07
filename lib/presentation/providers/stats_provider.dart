@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import '../../domain/usecases/stats_usecases.dart';
 
 class StatsProvider extends ChangeNotifier {
-  final bool _isSharer = false;
-  final bool _isMaster = false;
+  final GetStatsUseCase getStatsUseCase;
+  final CheckAchievementsUseCase checkAchievementsUseCase;
+
+  StatsProvider({
+    required this.getStatsUseCase,
+    required this.checkAchievementsUseCase,
+  });
+
   bool _isCollector = false;
-  final bool _isStudious = false;
-  final bool _isExplorer = false;
-  final bool _hasFirstStep = true; // Siempre true al abrir la app
+  final bool _hasFirstStep = true;
 
   int _phrasesViewed = 0;
   int _shareAttempts = 0;
   final Set<String> _exploredCategories = {};
 
-  // Getters
+  // Getters para logros
   bool get isSharer => _shareAttempts >= 3;
   bool get isMaster => _phrasesViewed >= 50;
   bool get isCollector => _isCollector;
@@ -20,52 +25,61 @@ class StatsProvider extends ChangeNotifier {
   bool get isExplorer => _exploredCategories.length >= 4;
   bool get hasFirstStep => _hasFirstStep;
 
+  // Getters para estadísticas
   int get phrasesViewed => _phrasesViewed;
   int get shareAttempts => _shareAttempts;
   int get categoriesExplored => _exploredCategories.length;
   Set<String> get exploredCategories => _exploredCategories;
 
-  // Método para cargar estadísticas guardadas
-  Future<void> loadStats() async {
-    // Aquí cargarías las estadísticas desde SharedPreferences
-    // Por ahora dejamos valores por defecto
-    notifyListeners();
+  int getUnlockedAchievementsCount() {
+    int count = 0;
+    if (hasFirstStep) count++;
+    if (isCollector) count++;
+    if (isStudious) count++;
+    if (isExplorer) count++;
+    if (isSharer) count++;
+    if (isMaster) count++;
+    return count;
   }
 
-  // Método para incrementar frases vistas
+  Future<void> loadStats() async {
+    try {
+      final stats = await getStatsUseCase();
+      _phrasesViewed = stats['phrasesViewed'] as int;
+      _shareAttempts = stats['shareAttempts'] as int;
+      _exploredCategories.clear();
+      _exploredCategories.addAll(stats['exploredCategories'] as Set<String>);
+      notifyListeners();
+    } catch (e) {
+      // Manejar error si es necesario
+    }
+  }
+
   void incrementPhrasesViewed(String phraseId) {
     _phrasesViewed++;
-    _checkAchievements();
     notifyListeners();
   }
 
-  // Método para incrementar intentos de compartir
-  void incrementShareAttempts() {
+  void incrementShare() {
     _shareAttempts++;
-    _checkAchievements();
     notifyListeners();
   }
 
-  // Método para agregar categoría explorada
   void addExploredCategory(String category) {
     _exploredCategories.add(category);
-    _checkAchievements();
     notifyListeners();
   }
 
-  // Método para actualizar si es coleccionista
+  Future<void> updateAchievements(int favoritesCount) async {
+    _isCollector = favoritesCount >= 5;
+    notifyListeners();
+  }
+
   void updateCollectorStatus(int favoritesCount) {
     _isCollector = favoritesCount >= 5;
     notifyListeners();
   }
 
-  // Método privado para verificar logros
-  void _checkAchievements() {
-    // Los getters ya calculan el estado de los logros
-    // Solo notificamos cambios
-  }
-
-  // Método para resetear estadísticas
   void resetStats() {
     _phrasesViewed = 0;
     _shareAttempts = 0;
@@ -73,10 +87,4 @@ class StatsProvider extends ChangeNotifier {
     _isCollector = false;
     notifyListeners();
   }
-
-  Future<void> updateAchievements(int favoritesCount) async {}
-
-  void incrementShare() {}
-
-  getUnlockedAchievementsCount() {}
 }

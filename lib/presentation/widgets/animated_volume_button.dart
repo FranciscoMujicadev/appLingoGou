@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class AnimatedVolumeButton extends StatefulWidget {
   final VoidCallback onTap;
+  final Color? color;
 
-  const AnimatedVolumeButton({super.key, required this.onTap});
+  const AnimatedVolumeButton({super.key, required this.onTap, this.color});
 
   @override
   State<AnimatedVolumeButton> createState() => _AnimatedVolumeButtonState();
@@ -55,6 +56,10 @@ class _AnimatedVolumeButtonState extends State<AnimatedVolumeButton>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = widget.color ??
+        (isDark ? const Color(0xFF2D2D4E) : const Color(0xFF1C1C1E));
+
     return GestureDetector(
       onTap: _handleTap,
       child: AnimatedBuilder(
@@ -63,19 +68,13 @@ class _AnimatedVolumeButtonState extends State<AnimatedVolumeButton>
           return Transform.scale(
             scale: _scaleAnimation.value,
             child: Container(
-              width: 50,
-              height: 50,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
                 color: _isAnimating
-                    ? Colors.blue.withOpacity(0.8)
-                    : Colors.black.withOpacity(0.6),
+                    ? const Color(0xFF6C63FF)
+                    : baseColor,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: _isAnimating
-                      ? Colors.blue.withOpacity(0.5)
-                      : Colors.white.withOpacity(0.3),
-                  width: _isAnimating ? 2 : 1,
-                ),
               ),
               child: Stack(
                 alignment: Alignment.center,

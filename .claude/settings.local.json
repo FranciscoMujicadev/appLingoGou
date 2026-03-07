@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter analyze lib/main.dart lib/providers/theme_provider.dart lib/theme/app_theme.dart lib/presentation/screens/main_navigation_screen.dart lib/presentation/screens/home_screen.dart lib/presentation/screens/favorites_screen.dart lib/presentation/screens/stats_screen.dart)",
+      "Bash(flutter build appbundle --release)",
+      "Bash(taskkill //F //PID 18896)",
+      "Bash(taskkill //F //IM java.exe)",
+      "Bash(del /F /Q \"C:\\\\Users\\\\franc\\\\.gradle\\\\caches\\\\journal-1\\\\journal-1.lock\")",
+      "Bash(flutter devices)",
+      "Bash(flutter run -d ZY32LCFWZ6)",
+      "Bash(flutter build apk --debug)",
+      "Bash(flutter install --device-id ZY32LCFWZ6)",
+      "Bash(flutter install --device-id ZY32LCFWZ6 --debug)"
+    ]
+  }
+}

@@ -3,12 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/injection_container.dart' as di;
+import '../../providers/guide_tour_provider.dart';
+import '../../theme/app_theme.dart';
 import '../providers/phrases_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
+import '../../providers/ad_provider.dart';
+import '../widgets/guide_tour_overlay.dart';
+import 'dashboard_screen.dart';
 import 'home_screen.dart';
+import 'stories_page.dart';
 import 'favorites_screen.dart';
-import 'stats_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -19,6 +24,18 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+
+  void _goTo(int index) => setState(() => _currentIndex = index);
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<GuideTourProvider>().initGuideTour();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,103 +50,109 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ChangeNotifierProvider(
           create: (_) => di.sl<StatsProvider>()..loadStats(),
         ),
+        ChangeNotifierProvider(create: (_) => AdProvider()),
       ],
-      child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: const [HomeScreen(), FavoritesScreen(), StatsScreen()],
-        ),
-        bottomNavigationBar: Consumer2<FavoritesProvider, StatsProvider>(
-          builder: (context, favProvider, statsProvider, _) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
+      child: Stack(
+        children: [
+          Scaffold(
+            body: IndexedStack(
+              index: _currentIndex,
+              children: [
+                // 0 — Dashboard
+                DashboardScreen(
+                  onGoToLearn: () => _goTo(1),
+                  onGoToStories: () => _goTo(2),
+                  onGoToFavorites: () => _goTo(3),
+                ),
+                // 1 — Learn
+                const HomeScreen(),
+                // 2 — Stories
+                const StoriesPage(),
+                // 3 — Favoritos
+                const FavoritesScreen(),
+              ],
+            ),
+            bottomNavigationBar: Consumer<FavoritesProvider>(
+              builder: (context, favProvider, _) {
+                final navBg = AppTheme.navBarColor(context);
+                final navBorder = AppTheme.navBarBorderColor(context);
+                final primary = Theme.of(context).colorScheme.primary;
+                final unselected = AppTheme.secondaryTextColor(context);
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: navBg,
+                    border: Border(
+                      top: BorderSide(color: navBorder, width: 0.5),
+                    ),
                   ),
-                ],
-              ),
-              child: BottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: (index) => setState(() => _currentIndex = index),
-                backgroundColor: Colors.black,
-                selectedItemColor: Colors.white,
-                unselectedItemColor: Colors.grey,
-                type: BottomNavigationBarType.fixed,
-                items: [
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Inicio',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Stack(
-                      children: [
-                        const Icon(Icons.favorite),
-                        if (favProvider.totalFavoritesCount > 0)
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 16,
-                                minHeight: 16,
-                              ),
-                              child: Text(
-                                '${favProvider.totalFavoritesCount}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                  child: BottomNavigationBar(
+                    currentIndex: _currentIndex,
+                    onTap: _goTo,
+                    backgroundColor: navBg,
+                    selectedItemColor: primary,
+                    unselectedItemColor: unselected,
+                    type: BottomNavigationBarType.fixed,
+                    elevation: 0,
+                    items: [
+                      const BottomNavigationBarItem(
+                        icon: Icon(Icons.home_rounded),
+                        label: 'Home',
+                      ),
+                      const BottomNavigationBarItem(
+                        icon: Icon(Icons.collections_bookmark_rounded),
+                        label: 'Learn',
+                      ),
+                      const BottomNavigationBarItem(
+                        icon: Icon(Icons.auto_stories_rounded),
+                        label: 'Stories',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Stack(
+                          children: [
+                            const Icon(Icons.favorite_rounded),
+                            if (favProvider.totalFavoritesCount > 0)
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                  ),
+                                  child: Text(
+                                    '${favProvider.totalFavoritesCount}',
+                                    style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color(0xFF1C1C1E)
+                                          : Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    label: 'Favoritos',
+                          ],
+                        ),
+                        label: 'Favoritos',
+                      ),
+                    ],
                   ),
-                  BottomNavigationBarItem(
-                    icon: Stack(
-                      children: [
-                        const Icon(Icons.analytics),
-                        if (_hasNewAchievements(statsProvider))
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.amber,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    label: 'Estadísticas',
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                );
+              },
+            ),
+          ),
+          // Guided Tour Overlay
+          const GuideTourOverlay(),
+        ],
       ),
     );
-  }
-
-  bool _hasNewAchievements(StatsProvider statsProvider) {
-    return (statsProvider.isCollector && statsProvider.phrasesViewed == 20) ||
-        (statsProvider.isStudious && statsProvider.phrasesViewed == 20) ||
-        (statsProvider.isExplorer && statsProvider.categoriesExplored == 4);
   }
 }

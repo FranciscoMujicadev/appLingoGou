@@ -56,11 +56,14 @@ class FavoritesProvider extends ChangeNotifier {
     final isFav = await isFavoriteUseCase(phrase);
 
     if (isFav) {
+      // Eliminar
       await removeFavoriteUseCase(phrase);
       _favorites.removeWhere((p) => p.id == phrase.id);
     } else {
+      // Agregar
       await addFavoriteUseCase(phrase);
-      _favorites.add(phrase);
+      // NO agregues aquí, recarga desde el repository
+      await _reloadFavorites();
     }
 
     notifyListeners();
@@ -70,17 +73,25 @@ class FavoritesProvider extends ChangeNotifier {
     return await isFavoriteUseCase(phrase);
   }
 
+  // Método privado para recargar favoritos después de agregar
+  Future<void> _reloadFavorites() async {
+    _favorites = await getFavoritesUseCase();
+  }
+
   // ========== MÉTODOS PARA CONTEXTOS ==========
 
   Future<void> toggleFavoriteContext(FavoriteContextEntity context) async {
     final isFav = await isFavoriteContextUseCase(context.id);
 
     if (isFav) {
+      // Eliminar
       await removeFavoriteContextUseCase(context.id);
       _favoriteContexts.removeWhere((c) => c.id == context.id);
     } else {
+      // Agregar
       await addFavoriteContextUseCase(context);
-      _favoriteContexts.add(context);
+      // NO agregues aquí, recarga desde el repository
+      await _reloadFavoriteContexts();
     }
 
     notifyListeners();
@@ -88,5 +99,10 @@ class FavoritesProvider extends ChangeNotifier {
 
   Future<bool> isFavoriteContext(String contextId) async {
     return await isFavoriteContextUseCase(contextId);
+  }
+
+  // Método privado para recargar contextos favoritos después de agregar
+  Future<void> _reloadFavoriteContexts() async {
+    _favoriteContexts = await getFavoriteContextsUseCase();
   }
 }
