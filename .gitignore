@@ -43,3 +43,27 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Archivos con secretos / claves de Firebase y servicios
+# NOTA: estos archivos YA están en el repositorio (commits anteriores).
+# Para eliminarlos del historial usa: git filter-repo o BFG Repo Cleaner.
+# Mientras tanto, si rotas las claves en Firebase Console, el historial
+# viejo queda inválido y el riesgo se reduce significativamente.
+# google-services.json       # Android Firebase config
+# lib/firebase_options.dart  # Firebase API keys para todas las plataformas
+# ios/Runner/GoogleService-Info.plist  # iOS Firebase config
+
+# Variables de entorno (si se crean en el futuro)
+.env
+.env.*
+*.env
+
+# Credenciales del keystore de Android — NUNCA subir al repositorio
+android/key.properties
+*.jks
+*.keystore
+
+# Archivos de configuración de Firebase y claves
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
