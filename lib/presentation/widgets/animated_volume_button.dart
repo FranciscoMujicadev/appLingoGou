@@ -91,8 +91,8 @@ class _AnimatedVolumeButtonState extends State<AnimatedVolumeButton>
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.white.withOpacity(
-                                  0.3 * (1 - _controller.value),
+                                color: Colors.white.withValues(
+                                  alpha: 0.3 * (1 - _controller.value),
                                 ),
                                 width: 1,
                               ),

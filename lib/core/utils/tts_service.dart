@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsService {
@@ -25,9 +26,9 @@ class TtsService {
       await _flutterTts!.setVolume(1.0);
 
       _isInitialized = true;
-      print('✅ TTS inicializado correctamente');
+      if (kDebugMode) debugPrint('✅ TTS inicializado correctamente');
     } catch (e) {
-      print('❌ Error al inicializar TTS: $e');
+      if (kDebugMode) debugPrint('❌ Error al inicializar TTS: $e');
       _isInitialized = false;
     } finally {
       _isInitializing = false;
@@ -43,12 +44,11 @@ class TtsService {
       if (_flutterTts == null) return;
 
       await _flutterTts!.stop();
-      await _flutterTts!.setLanguage('en-US');
       await _flutterTts!.speak(text);
 
-      print('🔊 Reproduciendo: $text');
+      if (kDebugMode) debugPrint('🔊 Reproduciendo: $text');
     } catch (e) {
-      print('❌ Error al reproducir: $e');
+      if (kDebugMode) debugPrint('❌ Error al reproducir: $e');
     }
   }
 
@@ -57,12 +57,11 @@ class TtsService {
       if (!_isInitialized) await initialize();
       if (_flutterTts == null) return;
       await _flutterTts!.stop();
-      await _flutterTts!.setLanguage('en-US');
       await _flutterTts!.setSpeechRate(0.25);
       await _flutterTts!.speak(text);
       await _flutterTts!.setSpeechRate(0.45);
     } catch (e) {
-      print('❌ Error al reproducir lento: $e');
+      if (kDebugMode) debugPrint('❌ Error al reproducir lento: $e');
     }
   }
 
@@ -70,7 +69,7 @@ class TtsService {
     try {
       await _flutterTts?.stop();
     } catch (e) {
-      print('❌ Error al detener: $e');
+      if (kDebugMode) debugPrint('❌ Error al detener: $e');
     }
   }
 
@@ -78,7 +77,7 @@ class TtsService {
     try {
       _flutterTts?.stop();
     } catch (e) {
-      print('Error en dispose: $e');
+      if (kDebugMode) debugPrint('Error en dispose: $e');
     }
   }
 }

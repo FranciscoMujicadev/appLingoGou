@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore para LingoGou
+//
+// Estructura de la base de datos:
+//   /users/{uid}
+//     stats: { phrasesViewed, shareAttempts, exploredCategories }
+//     progress: { [categoryName]: maxPageIndex }
+//     favoritePhrases: [ ... ]
+//     favoriteContexts: [ ... ]
+//
+// Regla principal: cada usuario solo puede leer y escribir SUS propios datos.
+// Nadie puede leer ni escribir datos de otro usuario.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Colección de usuarios: solo el dueño puede acceder a su documento
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      allow write: if request.auth != null
+                   && request.auth.uid == uid
+                   && validateUserData(request.resource.data);
+    }
+
+    // Deniega cualquier otra colección no declarada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// Valida que el documento del usuario tenga la estructura correcta
+function validateUserData(data) {
+  return (
+    data.keys().hasOnly(['stats', 'progress', 'favoritePhrases', 'favoriteContexts'])
+
+    && (!('stats' in data) || (
+      data.stats is map
+      && (!('phrasesViewed' in data.stats) || data.stats.phrasesViewed is int)
+      && (!('shareAttempts' in data.stats) || data.stats.shareAttempts is int)
+      && (!('exploredCategories' in data.stats) || data.stats.exploredCategories is list)
+    ))
+
+    && (!('progress' in data) || data.progress is map)
+
+    && (!('favoritePhrases' in data) || data.favoritePhrases is list)
+    && (!('favoriteContexts' in data) || data.favoriteContexts is list)
+  );
+}

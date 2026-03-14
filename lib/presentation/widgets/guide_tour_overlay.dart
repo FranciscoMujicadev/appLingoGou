@@ -17,46 +17,51 @@ class GuideTourOverlay extends StatelessWidget {
         final screenHeight = MediaQuery.of(context).size.height;
         final screenWidth = MediaQuery.of(context).size.width;
 
-        // Calcular la posición del highlight basado en xAlign y yAlign
         final highlightX = screenWidth * step.xAlign;
         final highlightY = screenHeight * step.yAlign;
-        const highlightRadius = 60.0;
+        final highlightWidth = step.width;
+        final highlightHeight = step.height;
 
         return Stack(
           children: [
-            // Fondo oscuro con agujero
+            // Dark overlay with hole
             GestureDetector(
               onTap: () => provider.nextStep(),
               child: CustomPaint(
                 painter: _HoleClipper(
                   centerX: highlightX,
                   centerY: highlightY,
-                  radius: highlightRadius,
+                  width: highlightWidth,
+                  height: highlightHeight,
                 ),
-                child: Container(color: Colors.black.withOpacity(0.65)),
+                child: Container(color: Colors.transparent),
               ),
             ),
-            // Caja de información
-            Positioned(
-              left: 20,
-              right: 20,
-              bottom: 80,
-              child: GestureDetector(
-                onTap: () {}, // Prevenir que se cierre al tocar la tarjeta
+
+
+            // Info Box
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutBack,
+              left: 24,
+              right: 24,
+              top: step.boxAtTop ? 60 : null,
+              bottom: step.boxAtTop ? null : 120,
+              child: Material(
+                color: Colors.transparent,
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1A2332),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: const Color(0xFF00A8E8),
-                      width: 2,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(32),
+                    border: const Border(
+                      bottom: BorderSide(color: Color(0xFF6366F1), width: 4),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.7),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 50,
+                        offset: const Offset(0, 20),
                       ),
                     ],
                   ),
@@ -64,135 +69,131 @@ class GuideTourOverlay extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header con número de paso
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF00A8E8),
-                              borderRadius: BorderRadius.circular(8),
+                              color: const Color(0xFF6366F1).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              '${provider.currentStep + 1}/${provider.steps.length}',
+                              'PASO ${provider.currentStep + 1} DE ${provider.steps.length}',
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                color: Color(0xFF6366F1),
+                                fontWeight: FontWeight.w900,
+                                fontSize: 10,
+                                letterSpacing: -0.5,
                               ),
                             ),
                           ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () => provider.skipGuideTour(),
-                            child: const Text(
-                              'Saltar guía',
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                          IconButton(
+                            onPressed: () => provider.skipGuideTour(),
+                            icon: const Icon(Icons.close,
+                                color: Color(0xFFD1D5DB), size: 20),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      // Título
+                      const SizedBox(height: 12),
                       Text(
                         step.title,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF111827),
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      // Descripción
+                      const SizedBox(height: 8),
                       Text(
                         step.description,
                         style: const TextStyle(
-                          color: Color(0xFFB0B0B0),
-                          fontSize: 15,
-                          height: 1.6,
+                          color: Color(0xFF6B7280),
+                          fontSize: 14,
+                          height: 1.5,
                         ),
                       ),
                       const SizedBox(height: 24),
-                      // Botones
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (provider.currentStep > 0)
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () => provider.previousStep(),
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(
-                                    color: Color(0xFF00A8E8),
-                                    width: 1.5,
+                          // Progress dots
+                          Row(
+                            children: List.generate(provider.steps.length, (i) {
+                              final isActive = i == provider.currentStep;
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                margin: const EdgeInsets.only(right: 6),
+                                height: 6,
+                                width: isActive ? 32 : 6,
+                                decoration: BoxDecoration(
+                                  color: isActive
+                                      ? const Color(0xFF6366F1)
+                                      : const Color(0xFFE5E7EB),
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              );
+                            }),
+                          ),
+                          // Buttons
+                          Row(
+                            children: [
+                              if (provider.currentStep > 0)
+                                TextButton(
+                                  onPressed: () => provider.previousStep(),
+                                  child: const Text(
+                                    'Atrás',
+                                    style: TextStyle(
+                                      color: Color(0xFF9CA3AF),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                onPressed: () => provider.nextStep(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF4F46E5),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                      horizontal: 24, vertical: 12),
+                                  elevation: 4,
+                                  shadowColor: const Color(0xFF6366F1)
+                                      .withValues(alpha: 0.3),
                                 ),
-                                child: const Text(
-                                  'Anterior',
-                                  style: TextStyle(
-                                    color: Color(0xFF00A8E8),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          if (provider.currentStep > 0)
-                            const SizedBox(width: 12),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => provider.nextStep(),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF00A8E8),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      provider.currentStep ==
+                                              provider.steps.length - 1
+                                          ? 'Entendido'
+                                          : 'Siguiente',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 12,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(Icons.chevron_right, size: 16),
+                                  ],
                                 ),
                               ),
-                              child: Text(
-                                provider.currentStep ==
-                                        provider.steps.length - 1
-                                    ? 'Empezar'
-                                    : 'Siguiente',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            // Flecha apuntando al highlight
-            Positioned(
-              left: highlightX - 10,
-              top: highlightY - 20,
-              child: Icon(
-                Icons.arrow_upward,
-                color: const Color(0xFF00A8E8),
-                size: 24,
               ),
             ),
           ],
@@ -205,42 +206,71 @@ class GuideTourOverlay extends StatelessWidget {
 class _HoleClipper extends CustomPainter {
   final double centerX;
   final double centerY;
-  final double radius;
+  final double width;
+  final double height;
 
   _HoleClipper({
     required this.centerX,
     required this.centerY,
-    required this.radius,
+    required this.width,
+    required this.height,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withOpacity(0.65);
+    final paint = Paint()..color = Colors.black.withValues(alpha: 0.4);
 
-    // Dibujar rectángulo completo
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-
-    // Limpiar el área del círculo (agujero)
-    canvas.drawCircle(
-      Offset(centerX, centerY),
-      radius,
-      Paint()..blendMode = BlendMode.clear,
+    final highlightRect = Rect.fromCenter(
+      center: Offset(centerX, centerY),
+      width: width,
+      height: height,
+    );
+    final roundedRect = RRect.fromRectAndRadius(
+      highlightRect,
+      const Radius.circular(16),
     );
 
-    // Dibujar borde del círculo con brillo
-    final borderPaint = Paint()
-      ..color = const Color(0xFF00A8E8)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..maskFilter = MaskFilter.blur(BlurStyle.outer, 8);
+    // Overlay path with hole
+    final path = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..addRRect(roundedRect)
+      ..fillType = PathFillType.evenOdd;
 
-    canvas.drawCircle(Offset(centerX, centerY), radius, borderPaint);
+    canvas.drawPath(path, paint);
+
+    // Highlight ring
+    final ringPaint = Paint()
+      ..color = const Color(0xFF3B82F6)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    
+    // Smooth transition shadow for highlight
+    final glowPaint = Paint()
+      ..color = const Color(0xFF3B82F6).withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+    final ringRect = RRect.fromRectAndRadius(
+      highlightRect.inflate(2),
+      const Radius.circular(18),
+    );
+
+    final glowRect = RRect.fromRectAndRadius(
+      highlightRect.inflate(4),
+      const Radius.circular(20),
+    );
+
+    canvas.drawRRect(glowRect, glowPaint);
+    canvas.drawRRect(ringRect, ringPaint);
   }
 
   @override
   bool shouldRepaint(_HoleClipper oldDelegate) {
     return oldDelegate.centerX != centerX ||
         oldDelegate.centerY != centerY ||
-        oldDelegate.radius != radius;
+        oldDelegate.width != width ||
+        oldDelegate.height != height;
   }
 }
+

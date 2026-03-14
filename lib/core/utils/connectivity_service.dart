@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 class ConnectivityService {
   final Connectivity _connectivity = Connectivity();
@@ -12,16 +13,8 @@ class ConnectivityService {
       return connectivityResult.contains(ConnectivityResult.mobile) ||
           connectivityResult.contains(ConnectivityResult.wifi);
     } catch (e) {
-      print('❌ Error al verificar conectividad: $e');
+      if (kDebugMode) debugPrint('❌ Error al verificar conectividad: $e');
       return false;
     }
-  }
-
-  // Escuchar cambios en la conexión
-  Stream<bool> get connectivityStream {
-    return _connectivity.onConnectivityChanged.map((result) {
-      return result.contains(ConnectivityResult.mobile) ||
-          result.contains(ConnectivityResult.wifi);
-    });
   }
 }

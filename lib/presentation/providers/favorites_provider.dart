@@ -1,6 +1,8 @@
 // lib/presentation/providers/favorites_provider.dart
 
 import 'package:flutter/material.dart';
+import '../../core/models/phrase_model.dart';
+import '../../core/services/firestore_service.dart';
 import '../../domain/entities/phrase_entity.dart';
 import '../../domain/entities/favorite_context_entity.dart';
 import '../../domain/usecases/manage_favorites_usecase.dart';
@@ -56,21 +58,24 @@ class FavoritesProvider extends ChangeNotifier {
     final isFav = await isFavoriteUseCase(phrase);
 
     if (isFav) {
-      // Eliminar
       await removeFavoriteUseCase(phrase);
       _favorites.removeWhere((p) => p.id == phrase.id);
     } else {
-      // Agregar
       await addFavoriteUseCase(phrase);
-      // NO agregues aquí, recarga desde el repository
       await _reloadFavorites();
     }
 
     notifyListeners();
+    _syncToFirestore();
   }
 
   Future<bool> isFavorite(PhraseEntity phrase) async {
     return await isFavoriteUseCase(phrase);
+  }
+
+  /// Verificación síncrona usando la lista ya cargada en memoria.
+  bool isFavoriteSync(PhraseEntity phrase) {
+    return _favorites.any((p) => p.id == phrase.id);
   }
 
   // Método privado para recargar favoritos después de agregar
@@ -84,17 +89,15 @@ class FavoritesProvider extends ChangeNotifier {
     final isFav = await isFavoriteContextUseCase(context.id);
 
     if (isFav) {
-      // Eliminar
       await removeFavoriteContextUseCase(context.id);
       _favoriteContexts.removeWhere((c) => c.id == context.id);
     } else {
-      // Agregar
       await addFavoriteContextUseCase(context);
-      // NO agregues aquí, recarga desde el repository
       await _reloadFavoriteContexts();
     }
 
     notifyListeners();
+    _syncToFirestore();
   }
 
   Future<bool> isFavoriteContext(String contextId) async {
@@ -104,5 +107,14 @@ class FavoritesProvider extends ChangeNotifier {
   // Método privado para recargar contextos favoritos después de agregar
   Future<void> _reloadFavoriteContexts() async {
     _favoriteContexts = await getFavoriteContextsUseCase();
+  }
+
+  void _syncToFirestore() {
+    FirestoreService.saveFavorites(
+      phrases: _favorites
+          .map((p) => Phrase.fromEntity(p).toJson())
+          .toList(),
+      contexts: _favoriteContexts.map((c) => c.toJson()).toList(),
+    );
   }
 }

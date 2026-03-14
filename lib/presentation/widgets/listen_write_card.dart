@@ -9,12 +9,16 @@ class ListenWriteCard extends StatefulWidget {
   final PhraseEntity phrase;
   final VoidCallback onContinue;
   final VoidCallback onSkip;
+  final VoidCallback? onCorrect;
+  final VoidCallback? onWrong;
 
   const ListenWriteCard({
     super.key,
     required this.phrase,
     required this.onContinue,
     required this.onSkip,
+    this.onCorrect,
+    this.onWrong,
   });
 
   @override
@@ -101,12 +105,18 @@ class _ListenWriteCardState extends State<ListenWriteCard> {
   }
 
   void _onContinue() {
+    final wasCorrect = _isCorrect;
     _controller.clear();
     setState(() {
       _hasChecked = false;
       _isCorrect = false;
     });
     _load();
+    if (wasCorrect) {
+      widget.onCorrect?.call();
+    } else {
+      widget.onWrong?.call();
+    }
     widget.onContinue();
   }
 

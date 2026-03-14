@@ -1,20 +1,30 @@
 // lib/presentation/screens/main_navigation_screen.dart
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/injection_container.dart' as di;
+import '../../core/services/firestore_service.dart';
 import '../../theme/app_theme.dart';
+import '../providers/auth_provider.dart';
 import '../providers/phrases_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
 import '../../providers/ad_provider.dart';
+import '../../providers/guide_tour_provider.dart';
+import '../widgets/guide_tour_overlay.dart';
 import 'dashboard_screen.dart';
 import 'home_screen.dart';
 import 'stories_page.dart';
 import 'favorites_screen.dart';
+import 'profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final String? initialCategory;
+  const MainNavigationScreen({super.key, this.initialCategory});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -22,12 +32,177 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+  late AuthProvider _authProvider;
+  bool _prevSignedIn = false;
 
   void _goTo(int index) => setState(() => _currentIndex = index);
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authProvider = context.read<AuthProvider>();
+      _prevSignedIn = _authProvider.isSignedIn;
+      _authProvider.addListener(_onAuthChanged);
+      if (_authProvider.isSignedIn) _restoreFromCloud();
+    });
+
+  }
+
+  @override
+  void dispose() {
+    _authProvider.removeListener(_onAuthChanged);
+    super.dispose();
+  }
+
+  void _onAuthChanged() {
+    final isSignedIn = _authProvider.isSignedIn;
+    if (isSignedIn && !_prevSignedIn) {
+      _restoreFromCloud();
+    }
+    _prevSignedIn = isSignedIn;
+  }
+
+  // ─── Restaurar datos desde Firestore al iniciar sesión ──────────────────
+
+  Future<void> _restoreFromCloud() async {
+    if (!mounted) return;
+    final uid = context.read<AuthProvider>().user?.uid;
+    final statsProvider = di.sl<StatsProvider>();
+    final favoritesProvider = di.sl<FavoritesProvider>();
+    final phrasesProvider = di.sl<PhrasesProvider>();
+    if (uid == null) return;
+
+    final cloudData = await FirestoreService.loadUserData(uid);
+    if (cloudData == null) {
+      // Primera vez: subir datos locales a la nube
+      _pushLocalToCloud();
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+
+    // ── Merge stats ────────────────────────────────────────────────────────
+    final cloudStats = cloudData['stats'] as Map<String, dynamic>?;
+    int mergedPhrases = prefs.getInt('phrasesViewed') ?? 0;
+    int mergedShares = prefs.getInt('shareAttempts') ?? 0;
+    Set<String> mergedCategories = Set<String>.from(
+      prefs.getStringList('exploredCategories') ?? [],
+    );
+    if (cloudStats != null) {
+      mergedPhrases = max(
+        mergedPhrases,
+        (cloudStats['phrasesViewed'] as int?) ?? 0,
+      );
+      mergedShares = max(
+        mergedShares,
+        (cloudStats['shareAttempts'] as int?) ?? 0,
+      );
+      mergedCategories.addAll(
+        (cloudStats['exploredCategories'] as List?)?.cast<String>() ?? [],
+      );
+    }
+
+    // ── Merge progress ─────────────────────────────────────────────────────
+    final cloudProgress = cloudData['progress'] as Map<String, dynamic>?;
+    final localProgressJson = prefs.getString('phrase_progress');
+    Map<String, int> mergedProgress = {};
+    if (localProgressJson != null) {
+      mergedProgress = (jsonDecode(localProgressJson) as Map).map(
+        (k, v) => MapEntry(k as String, (v as num).toInt()),
+      );
+    }
+    if (cloudProgress != null) {
+      for (final e in cloudProgress.entries) {
+        final cloudVal = (e.value as num).toInt();
+        mergedProgress[e.key] = max(mergedProgress[e.key] ?? 0, cloudVal);
+      }
+    }
+
+    // ── Merge favorites ────────────────────────────────────────────────────
+    List<Map<String, dynamic>> mergedPhrasesFav = [];
+    final localFavJson = prefs.getString('favorites');
+    if (localFavJson != null) {
+      mergedPhrasesFav =
+          (jsonDecode(localFavJson) as List).cast<Map<String, dynamic>>();
+    }
+    final cloudPhrasesFav =
+        (cloudData['favoritePhrases'] as List?)?.cast<Map<String, dynamic>>() ??
+        [];
+    final localPhraseIds =
+        mergedPhrasesFav.map((p) => p['id'] as String).toSet();
+    for (final p in cloudPhrasesFav) {
+      if (!localPhraseIds.contains(p['id'] as String)) mergedPhrasesFav.add(p);
+    }
+
+    List<Map<String, dynamic>> mergedContextsFav = [];
+    final localCtxJson = prefs.getString('favoriteContexts');
+    if (localCtxJson != null) {
+      mergedContextsFav =
+          (jsonDecode(localCtxJson) as List).cast<Map<String, dynamic>>();
+    }
+    final cloudContextsFav =
+        (cloudData['favoriteContexts'] as List?)
+            ?.cast<Map<String, dynamic>>() ??
+        [];
+    final localCtxIds =
+        mergedContextsFav.map((c) => c['id'] as String).toSet();
+    for (final c in cloudContextsFav) {
+      if (!localCtxIds.contains(c['id'] as String)) mergedContextsFav.add(c);
+    }
+
+    // ── Guardar merged en SharedPreferences ────────────────────────────────
+    await prefs.setInt('phrasesViewed', mergedPhrases);
+    await prefs.setInt('shareAttempts', mergedShares);
+    await prefs.setStringList('exploredCategories', mergedCategories.toList());
+    await prefs.setString('phrase_progress', jsonEncode(mergedProgress));
+    await prefs.setString('favorites', jsonEncode(mergedPhrasesFav));
+    await prefs.setString('favoriteContexts', jsonEncode(mergedContextsFav));
+
+    if (!mounted) return;
+
+    // ── Actualizar providers en memoria ────────────────────────────────────
+    statsProvider.restoreFromCloud(
+      phrasesViewed: mergedPhrases,
+      shareAttempts: mergedShares,
+      exploredCategories: mergedCategories,
+    );
+    await favoritesProvider.loadFavorites();
+    phrasesProvider.restoreProgressFromCloud(mergedProgress);
+  }
+
+  Future<void> _pushLocalToCloud() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    FirestoreService.saveStats(
+      phrasesViewed: prefs.getInt('phrasesViewed') ?? 0,
+      shareAttempts: prefs.getInt('shareAttempts') ?? 0,
+      exploredCategories: Set<String>.from(
+        prefs.getStringList('exploredCategories') ?? [],
+      ),
+    );
+
+    final progressJson = prefs.getString('phrase_progress');
+    if (progressJson != null) {
+      FirestoreService.saveProgress(
+        (jsonDecode(progressJson) as Map).map(
+          (k, v) => MapEntry(k as String, (v as num).toInt()),
+        ),
+      );
+    }
+
+    final favJson = prefs.getString('favorites');
+    final ctxJson = prefs.getString('favoriteContexts');
+    FirestoreService.saveFavorites(
+      phrases:
+          favJson != null
+              ? (jsonDecode(favJson) as List).cast<Map<String, dynamic>>()
+              : [],
+      contexts:
+          ctxJson != null
+              ? (jsonDecode(ctxJson) as List).cast<Map<String, dynamic>>()
+              : [],
+    );
   }
 
   @override
@@ -35,7 +210,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => di.sl<PhrasesProvider>()..initialize(),
+          create: (_) => di.sl<PhrasesProvider>()
+              ..initialize(initialCategory: widget.initialCategory),
         ),
         ChangeNotifierProvider(
           create: (_) => di.sl<FavoritesProvider>()..loadFavorites(),
@@ -48,6 +224,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       child: Stack(
         children: [
           Scaffold(
+            key: const ValueKey('main_scaffold'),
             body: IndexedStack(
               index: _currentIndex,
               children: [
@@ -63,6 +240,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 const StoriesPage(),
                 // 3 — Favoritos
                 const FavoritesScreen(),
+                // 4 — Perfil
+                const ProfileScreen(),
               ],
             ),
             bottomNavigationBar: Consumer<FavoritesProvider>(
@@ -136,6 +315,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                         ),
                         label: 'Favoritos',
                       ),
+                      const BottomNavigationBarItem(
+                        icon: Icon(Icons.person_rounded),
+                        label: 'Perfil',
+                      ),
                     ],
                   ),
                 );
@@ -144,6 +327,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         ],
       ),
+
     );
   }
 }

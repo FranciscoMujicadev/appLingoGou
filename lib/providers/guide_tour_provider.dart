@@ -9,87 +9,75 @@ class GuideTourProvider extends ChangeNotifier {
   int get currentStep => _currentStep;
 
   final List<GuideTourStep> steps = [
-    // 1. Nombre del curso / título de la aplicación
     GuideTourStep(
-      key: 'app_title',
-      title: 'Bienvenido a LingoGou',
-      description: 'El nombre de tu curso de idiomas.',
-      xAlign: 0.2,
-      yAlign: 0.10,
+      title: "LingoGou",
+      description: "Bienvenido. Aquí siempre podrás ver el nombre de tu app favorita.",
+      xAlign: 0.22,
+      yAlign: 0.088,
+      width: 130,
+      height: 40,
+      boxAtTop: false,
     ),
-    // 2. Indicador de progreso general
     GuideTourStep(
-      key: 'progress_indicator',
-      title: 'Tu progreso general',
-      description: 'En este número ves tu avance en el nivel actual.',
-      xAlign: 0.8,
-      yAlign: 0.15,
+      title: "Tu Racha",
+      description: "Lleva el control de tus días de estudio y progreso diario aquí.",
+      xAlign: 0.65,
+      yAlign: 0.088,
+      width: 160,
+      height: 40,
+      boxAtTop: false,
     ),
-    // 3. Selección del día
     GuideTourStep(
-      key: 'days_selector',
-      title: 'Selección del Nivel',
-      description: 'Cambia entre las lecciones diarias.',
+      title: "Modo Oscuro",
+      description: "Cambia entre modo claro y oscuro con este botón según prefieras.",
+      xAlign: 0.89,
+      yAlign: 0.088,
+      width: 50,
+      height: 40,
+      boxAtTop: false,
+    ),
+
+    GuideTourStep(
+      title: "La Palabra",
+      description: "Aquí tienes la palabra principal y su pronunciación figurada.",
       xAlign: 0.5,
-      yAlign: 0.15,
+      yAlign: 0.24,
+      width: 320,
+      height: 120,
+      boxAtTop: false,
     ),
-    // 4. Tarjeta de frase principal
     GuideTourStep(
-      key: 'phrase_card',
-      title: 'Expresión Principal',
-      description: 'La frase o palabra clave a aprender hoy.',
+      title: "Traducción y Uso",
+      description: "Comparamos la traducción literal con el significado real que usarás.",
       xAlign: 0.5,
-      yAlign: 0.50,
+      yAlign: 0.48,
+      width: 320,
+      height: 310,
+      boxAtTop: false,
     ),
-    // 5a. Traducción literal
     GuideTourStep(
-      key: 'literal_meaning',
-      title: 'Traducción Literal',
-      description: 'Cómo se traduce palabra por palabra.',
+      title: "Acciones Rápidas",
+      description: "Escucha, guarda en favoritos o comparte esta palabra con amigos.",
       xAlign: 0.5,
-      yAlign: 0.60,
+      yAlign: 0.705,
+      width: 330,
+      height: 80,
+      boxAtTop: true,
     ),
-    // 5b. Significado real/contextual
     GuideTourStep(
-      key: 'real_meaning',
-      title: 'Significado real',
-      description: 'Cómo se debe usar en la conversación real.',
+      title: "Continuar",
+      description: "Cuando estés listo, pulsa aquí para pasar a la siguiente actividad del día.",
       xAlign: 0.5,
-      yAlign: 0.70,
+      yAlign: 0.825,
+      width: 360,
+      height: 60,
+      boxAtTop: true,
     ),
-    // 6a. Botón de audio
-    GuideTourStep(
-      key: 'audio_button',
-      title: 'Escucha la pronunciación',
-      description: 'Reproduce la frase con voz de nativo.',
-      xAlign: 0.25,
-      yAlign: 0.85,
-    ),
-    // 6b. Botón de favoritos
-    GuideTourStep(
-      key: 'favorite_button',
-      title: 'Añade a Favoritos',
-      description: 'Guarda esta frase para repasarla más tarde.',
-      xAlign: 0.50,
-      yAlign: 0.85,
-    ),
-    // 6c. Botón de compartir
-    GuideTourStep(
-      key: 'share_button',
-      title: 'Comparte con otros',
-      description: 'Envía la frase por WhatsApp, email, etc.',
-      xAlign: 0.75,
-      yAlign: 0.85,
-    ),
-    // 7. Navegación global
-    GuideTourStep(
-      key: 'navigation_bar',
-      title: 'Navegación global',
-      description: 'Explora lecciones, historias y tus frases guardadas.',
-      xAlign: 0.5,
-      yAlign: 0.95,
-    ),
+
+
   ];
+
+
 
   Future<void> initGuideTour() async {
     final hasSeenGuide = await OnboardingStorage.hasSeenGuideTour();
@@ -133,17 +121,24 @@ class GuideTourProvider extends ChangeNotifier {
 }
 
 class GuideTourStep {
-  final String key;
+  final String? key; // Opcional si usamos alineación pura
   final String title;
   final String description;
   final double xAlign;
   final double yAlign;
+  final double width;
+  final double height;
+  final bool boxAtTop; // Si el cuadro informativo va arriba o abajo
 
   GuideTourStep({
-    required this.key,
+    this.key,
     required this.title,
     required this.description,
     required this.xAlign,
     required this.yAlign,
+    this.width = 100.0,
+    this.height = 100.0,
+    this.boxAtTop = false,
   });
 }
+

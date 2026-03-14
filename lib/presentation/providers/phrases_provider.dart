@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/services/firestore_service.dart';
 import '../../domain/entities/phrase_entity.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/repositories/phrases_repository.dart';
@@ -27,6 +32,7 @@ class PhrasesProvider extends ChangeNotifier {
   List<PhraseEntity> _currentPhrases = [];
   int _currentIndex = 0;
   final Map<String, int> _maxPhraseReached = {};
+  Timer? _saveTimer;
 
   List<CategoryEntity> get categories => _categories;
   String get selectedCategory => _selectedCategory;
@@ -50,6 +56,12 @@ class PhrasesProvider extends ChangeNotifier {
   // 🆕 NUEVO: Verificar si es el último día
   bool get isLastDay => currentDayNumber >= totalDays;
 
+  @override
+  void dispose() {
+    _saveTimer?.cancel();
+    super.dispose();
+  }
+
   void loadCategories() {
     _categories = getCategoriesUseCase();
     notifyListeners();
@@ -71,16 +83,80 @@ class PhrasesProvider extends ChangeNotifier {
   void changePage(int index) {
     _currentIndex = index;
     final prev = _maxPhraseReached[_selectedCategory] ?? 0;
-    if (index + 1 > prev) _maxPhraseReached[_selectedCategory] = index + 1;
+    if (index + 1 > prev) {
+      _maxPhraseReached[_selectedCategory] = index + 1;
+      _saveProgress();
+      notifyListeners(); // solo cuando el progreso avanza
+    }
     if (currentPhrase != null) {
       incrementPhrasesViewedUseCase(currentPhrase!.id);
     }
-    notifyListeners();
   }
 
-  void initialize() {
+  void initialize({String? initialCategory}) {
     loadCategories();
-    changeCategory(_selectedCategory);
+    final cat = (initialCategory != null &&
+            _categories.any((c) => c.name == initialCategory))
+        ? initialCategory
+        : _selectedCategory;
+    changeCategory(cat);
+    _loadProgressFromPrefs();
+  }
+
+  /// Persiste el progreso en SharedPreferences y sincroniza con Firestore.
+  /// Usa debounce de 2 s para no escribir en cada swipe.
+  void _saveProgress() {
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(seconds: 2), () async {
+      final snapshot = Map<String, int>.from(_maxPhraseReached);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('phrase_progress', jsonEncode(snapshot));
+      FirestoreService.saveProgress(snapshot);
+    });
+  }
+
+  /// Carga el progreso guardado en SharedPreferences al iniciar.
+  Future<void> _loadProgressFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('phrase_progress');
+    if (raw == null) return;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) {
+        // Formato inesperado — descartar para evitar estado corrupto
+        await prefs.remove('phrase_progress');
+        return;
+      }
+      final map = decoded as Map<String, dynamic>;
+      _maxPhraseReached.addAll(
+        map.map((k, v) {
+          final intVal = v is num
+              ? v.toInt()
+              : int.tryParse(v.toString()) ?? 0;
+          return MapEntry(k, intVal.clamp(0, 99999));
+        }),
+      );
+      notifyListeners();
+    } catch (_) {
+      // JSON corrupto → limpiar y arrancar desde cero sin crashear
+      await prefs.remove('phrase_progress');
+    }
+  }
+
+  /// Aplica el progreso descargado de Firestore (toma el máximo local/cloud).
+  void restoreProgressFromCloud(Map<String, int> cloudProgress) {
+    bool changed = false;
+    for (final entry in cloudProgress.entries) {
+      final current = _maxPhraseReached[entry.key] ?? 0;
+      if (entry.value > current) {
+        _maxPhraseReached[entry.key] = entry.value;
+        changed = true;
+      }
+    }
+    if (changed) {
+      _saveProgress();
+      notifyListeners();
+    }
   }
 
   Future<Map<String, DayProgressModel>> getDaysProgress() async {

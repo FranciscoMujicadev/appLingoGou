@@ -122,7 +122,7 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                         _checkConnectionAndProceed();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: const Color(0xFF6C63FF),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -153,7 +153,7 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                         Row(
                           children: [
                             Icon(Icons.info_outline,
-                                color: Colors.blue.shade300, size: 20),
+                                color: const Color(0xFF9C95FF), size: 20),
                             const SizedBox(width: 8),
                             const Text(
                               'Verifica:',

@@ -1,5 +1,6 @@
 // lib/providers/ad_provider.dart
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../services/ad_service.dart';
@@ -34,8 +35,10 @@ class AdProvider with ChangeNotifier {
 
   void incrementCardView() {
     _cardsViewedCount++;
-    debugPrint('📊 Cards vistas: $_cardsViewedCount de 13');
-    notifyListeners();
+    // Solo notificar cuando cambia shouldShowAd (al cruzar el umbral de 13)
+    if (_cardsViewedCount == 13) {
+      notifyListeners();
+    }
   }
 
   Future<bool> showRewardedAd(BuildContext context) async {
@@ -53,7 +56,7 @@ class AdProvider with ChangeNotifier {
       onRewardEarned: () {
         _cardsViewedCount = 0;
         _isLoadingAd = false;
-        debugPrint('✅ Anuncio visto, contador reseteado');
+        if (kDebugMode) debugPrint('✅ Anuncio visto, contador reseteado');
         notifyListeners();
       },
       onAdDismissed: () {
@@ -88,10 +91,10 @@ class AdProvider with ChangeNotifier {
         onAdLoaded: () {
           _loadedAdIndices.add(index);
           notifyListeners();
-          debugPrint('✅ Banner Ad cargado para índice $index');
+          if (kDebugMode) debugPrint('✅ Banner Ad cargado para índice $index');
         },
         onAdFailedToLoad: (error) {
-          debugPrint('❌ Error cargando Banner Ad para índice $index: $error');
+          if (kDebugMode) debugPrint('❌ Error cargando Banner Ad para índice $index: $error');
           _bannerAds.remove(index);
           notifyListeners();
         },
@@ -99,7 +102,7 @@ class AdProvider with ChangeNotifier {
 
       _bannerAds[index] = bannerAd;
     } catch (e) {
-      debugPrint('❌ Excepción al cargar Banner Ad: $e');
+      if (kDebugMode) debugPrint('❌ Excepción al cargar Banner Ad: $e');
     }
   }
 
@@ -110,7 +113,7 @@ class AdProvider with ChangeNotifier {
       ad.dispose();
       _bannerAds.remove(index);
       _loadedAdIndices.remove(index);
-      debugPrint('🗑️ Banner Ad liberado para índice $index');
+      if (kDebugMode) debugPrint('🗑️ Banner Ad liberado para índice $index');
     }
   }
 

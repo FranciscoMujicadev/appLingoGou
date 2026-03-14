@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../../core/utils/tts_service.dart';
 import '../../data/models/story_model.dart';
 
 class StoryCard extends StatefulWidget {
@@ -13,7 +13,7 @@ class StoryCard extends StatefulWidget {
 
 class _StoryCardState extends State<StoryCard>
     with AutomaticKeepAliveClientMixin {
-  final FlutterTts _flutterTts = FlutterTts();
+  final TtsService _ttsService = TtsService();
   bool _isReading = false;
   bool _isExpanded = false;
   bool _showTranslation = false;
@@ -21,51 +21,27 @@ class _StoryCardState extends State<StoryCard>
   @override
   bool get wantKeepAlive => true;
 
-  @override
-  void initState() {
-    super.initState();
-    _initTts();
-  }
-
-  Future<void> _initTts() async {
-    await _flutterTts.setLanguage("en-US");
-    await _flutterTts.setSpeechRate(0.45);
-    await _flutterTts.setVolume(1.0);
-    await _flutterTts.setPitch(1.0);
-
-    _flutterTts.setCompletionHandler(() {
-      if (mounted) {
-        setState(() {
-          _isReading = false;
-        });
-      }
-    });
-  }
-
   Future<void> _toggleReading() async {
     if (_isReading) {
-      await _flutterTts.stop();
-      setState(() {
-        _isReading = false;
-      });
+      await _ttsService.stop();
+      if (mounted) setState(() => _isReading = false);
     } else {
-      setState(() {
-        _isReading = true;
-      });
-      await _flutterTts.speak(widget.story.content);
+      setState(() => _isReading = true);
+      await _ttsService.speak(widget.story.content);
+      if (mounted) setState(() => _isReading = false);
     }
   }
 
   Color _getLevelColor() {
     switch (widget.story.level) {
       case 'Beginner':
-        return const Color(0xFF6FBAFF);
+        return const Color(0xFF6C63FF);
       case 'Intermediate':
         return const Color(0xFF7BDCB5);
       case 'Advanced':
-        return const Color(0xFF6FBAFF);
+        return const Color(0xFF6C63FF);
       default:
-        return const Color(0xFF6FBAFF);
+        return const Color(0xFF6C63FF);
     }
   }
 
@@ -84,12 +60,6 @@ class _StoryCardState extends State<StoryCard>
       default:
         return Icons.book_rounded;
     }
-  }
-
-  @override
-  void dispose() {
-    _flutterTts.stop();
-    super.dispose();
   }
 
   @override
@@ -140,7 +110,7 @@ class _StoryCardState extends State<StoryCard>
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: levelColor.withOpacity(0.2),
+                        color: levelColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -208,10 +178,10 @@ class _StoryCardState extends State<StoryCard>
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: levelColor.withOpacity(0.15),
+                  color: levelColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: levelColor.withOpacity(0.4),
+                    color: levelColor.withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                 ),
@@ -337,7 +307,7 @@ class _StoryCardState extends State<StoryCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

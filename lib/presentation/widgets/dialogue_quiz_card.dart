@@ -4,12 +4,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../domain/entities/phrase_entity.dart';
+import 'shared/quiz_utils.dart';
 
 class DialogueQuizCard extends StatefulWidget {
   final PhraseEntity phrase;
   final List<PhraseEntity> allPhrases;
   final VoidCallback onContinue;
   final VoidCallback onSkip;
+  final VoidCallback? onCorrect;
+  final VoidCallback? onWrong;
 
   const DialogueQuizCard({
     super.key,
@@ -17,6 +20,8 @@ class DialogueQuizCard extends StatefulWidget {
     required this.allPhrases,
     required this.onContinue,
     required this.onSkip,
+    this.onCorrect,
+    this.onWrong,
   });
 
   @override
@@ -71,7 +76,7 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
     );
 
     // Build options: correct English sentence + 2 distinct wrong ones
-    final correctKw = _keywords(correctEnglish);
+    final correctKw = quizKeywords(correctEnglish);
     final others = widget.allPhrases
         .where((p) => p.id != widget.phrase.id && p.contextExamples.isNotEmpty)
         .toList()
@@ -81,9 +86,9 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
     for (final p in others) {
       if (wrongs.length >= 2) break;
       final candidate = p.contextExamples[0].englishExample;
-      final candidateKw = _keywords(candidate);
-      if (_jaccard(correctKw, candidateKw) > 0.35) continue;
-      if (wrongs.any((w) => _jaccard(_keywords(w), candidateKw) > 0.35)) continue;
+      final candidateKw = quizKeywords(candidate);
+      if (jaccardSimilarity(correctKw, candidateKw) > 0.35) continue;
+      if (wrongs.any((w) => jaccardSimilarity(quizKeywords(w), candidateKw) > 0.35)) continue;
       wrongs.add(candidate);
     }
     // Fallback: fill remaining slots without similarity filter
@@ -104,18 +109,6 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
   bool get _isCorrect =>
       _selectedIndex != null && _options[_selectedIndex!].isCorrect;
 
-  Set<String> _keywords(String text) => text
-      .toLowerCase()
-      .replaceAll(RegExp(r'[^\wáéíóúüñ\s]'), '')
-      .split(RegExp(r'\s+'))
-      .where((w) => w.length > 3)
-      .toSet();
-
-  double _jaccard(Set<String> a, Set<String> b) {
-    if (a.isEmpty && b.isEmpty) return 0;
-    return a.intersection(b).length / a.union(b).length;
-  }
-
   void _onCheck() {
     if (_selectedIndex == null) return;
     setState(() => _hasChecked = true);
@@ -125,11 +118,17 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
   }
 
   void _onContinue() {
+    final wasCorrect = _isCorrect;
     setState(() {
       _selectedIndex = null;
       _hasChecked = false;
     });
     _setup();
+    if (wasCorrect) {
+      widget.onCorrect?.call();
+    } else {
+      widget.onWrong?.call();
+    }
     widget.onContinue();
   }
 

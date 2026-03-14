@@ -10,7 +10,19 @@
       "Bash(flutter run -d ZY32LCFWZ6)",
       "Bash(flutter build apk --debug)",
       "Bash(flutter install --device-id ZY32LCFWZ6)",
-      "Bash(flutter install --device-id ZY32LCFWZ6 --debug)"
+      "Bash(flutter install --device-id ZY32LCFWZ6 --debug)",
+      "Bash(flutter analyze lib/presentation/screens/dashboard_screen.dart lib/presentation/providers/stats_provider.dart)",
+      "Bash(xargs wc -l)",
+      "Bash(git -C /c/lingogou/Englishappv2 ls-files)",
+      "Bash(git -C /c/lingogou/Englishappv2 log --all --full-history --oneline -- \"android/app/google-services.json\" \"lib/firebase_options.dart\")",
+      "Bash(git -C /c/lingogou/Englishappv2 show 39f9e7c:android/app/google-services.json)",
+      "Bash(git -C /c/lingogou/Englishappv2 show 39f9e7c:lib/firebase_options.dart)",
+      "Bash(ls /c/lingogou/Englishappv2/*.md)",
+      "Bash(xargs grep -l \"cleartext\\\\|usesCleartextTraffic\")",
+      "Bash(git -C /c/lingogou/Englishappv2 log --all --full-history -S \"storePassword\\\\|keyPassword\" --oneline)",
+      "Bash(grep -r \"password\\\\|secret\\\\|token\" c:lingogouEnglishappv2lib --include=*.dart)",
+      "Bash(grep -r \"debugPrint\\\\|print\\(\" c:lingogouEnglishappv2lib --include=*.dart)",
+      "Bash(find c:lingogouEnglishappv2 -name .env* -o -name secrets* -o -name config.dart)"
     ]
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AdService {
@@ -38,11 +39,11 @@ class AdService {
   Future<void> loadRewardedAd() async {
     // 🎯 No cargar si ya hay uno cargado
     if (_isAdLoaded && _rewardedAd != null) {
-      debugPrint('⚠️ Ya hay un Rewarded Ad cargado');
+      if (kDebugMode) debugPrint('⚠️ Ya hay un Rewarded Ad cargado');
       return;
     }
 
-    debugPrint('🔄 Intentando cargar Rewarded Ad...');
+    if (kDebugMode) debugPrint('🔄 Intentando cargar Rewarded Ad...');
 
     await RewardedAd.load(
       adUnitId: rewardedAdUnitId,
@@ -51,12 +52,12 @@ class AdService {
         onAdLoaded: (ad) {
           _rewardedAd = ad;
           _isAdLoaded = true;
-          debugPrint('✅ Rewarded Ad cargado correctamente');
+          if (kDebugMode) debugPrint('✅ Rewarded Ad cargado correctamente');
         },
         onAdFailedToLoad: (error) {
           _isAdLoaded = false;
           _rewardedAd = null;
-          debugPrint(
+          if (kDebugMode) debugPrint(
             '❌ Error cargando Rewarded Ad: ${error.code} - ${error.message}',
           );
         },
@@ -69,20 +70,20 @@ class AdService {
     required VoidCallback onAdDismissed,
   }) async {
     if (_rewardedAd == null || !_isAdLoaded) {
-      debugPrint('❌ No hay anuncio cargado para mostrar');
+      if (kDebugMode) debugPrint('❌ No hay anuncio cargado para mostrar');
       // 🎯 Intentar cargar uno nuevo
       await loadRewardedAd();
       return false;
     }
 
-    debugPrint('▶️ Mostrando Rewarded Ad...');
+    if (kDebugMode) debugPrint('▶️ Mostrando Rewarded Ad...');
 
     _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
-        debugPrint('📺 Anuncio mostrado en pantalla completa');
+        if (kDebugMode) debugPrint('📺 Anuncio mostrado en pantalla completa');
       },
       onAdDismissedFullScreenContent: (ad) {
-        debugPrint('❌ Usuario cerró el anuncio');
+        if (kDebugMode) debugPrint('❌ Usuario cerró el anuncio');
         ad.dispose();
         _rewardedAd = null;
         _isAdLoaded = false;
@@ -91,7 +92,7 @@ class AdService {
         loadRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
-        debugPrint(
+        if (kDebugMode) debugPrint(
           '❌ Error mostrando anuncio: ${error.code} - ${error.message}',
         );
         ad.dispose();
@@ -105,7 +106,7 @@ class AdService {
 
     await _rewardedAd!.show(
       onUserEarnedReward: (ad, reward) {
-        debugPrint('🎁 ¡Recompensa ganada! ${reward.amount} ${reward.type}');
+        if (kDebugMode) debugPrint('🎁 ¡Recompensa ganada! ${reward.amount} ${reward.type}');
         onRewardEarned();
       },
     );
@@ -124,11 +125,11 @@ class AdService {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          debugPrint('✅ Banner Ad cargado');
+          if (kDebugMode) debugPrint('✅ Banner Ad cargado');
           onAdLoaded();
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('❌ Banner Ad falló: ${error.code} - ${error.message}');
+          if (kDebugMode) debugPrint('❌ Banner Ad falló: ${error.code} - ${error.message}');
           ad.dispose();
           onAdFailedToLoad(error);
         },

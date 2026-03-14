@@ -3,13 +3,16 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  // ─── Brand purple ────────────────────────────────────────────────────────
+  static const Color primaryPurple = Color(0xFF6C63FF);
+
   // ─── Dark palette (current app look) ───────────────────────────────────
   static const Color _darkScaffold = Color(0xFF000000);
   static const Color _darkSurface = Color(0xFF1C1C1E);
   static const Color _darkCard = Color(0xFF1A1A1A);
   static const Color _darkNavBar = Color(0xFF2C2C2E);
   static const Color _darkNavBarBorder = Color(0xFF3A3A3C);
-  static const Color _darkPrimary = Color(0xFF6FBAFF);
+  static const Color _darkPrimary = primaryPurple;
   static const Color _darkOnSurface = Colors.white;
   static const Color _darkSecondary = Color(0xFF98989D);
   static const Color _darkDivider = Color(0xFF3A3A3C);
@@ -20,7 +23,7 @@ class AppTheme {
   static const Color _lightCard = Color(0xFFFFFFFF);
   static const Color _lightNavBar = Color(0xFFFFFFFF);
   static const Color _lightNavBarBorder = Color(0xFFE5E5EA);
-  static const Color _lightPrimary = Color(0xFF007AFF);
+  static const Color _lightPrimary = primaryPurple;
   static const Color _lightOnSurface = Color(0xFF1C1C1E);
   static const Color _lightSecondary = Color(0xFF6C6C70);
   static const Color _lightDivider = Color(0xFFE5E5EA);
@@ -74,7 +77,7 @@ class AppTheme {
           labelColor: Colors.white,
           unselectedLabelColor: _darkSecondary,
           indicator: BoxDecoration(
-            color: Color(0xFF3672F4),
+            color: primaryPurple,
             borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ),

@@ -4,12 +4,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../domain/entities/phrase_entity.dart';
+import 'shared/quiz_utils.dart';
 
 class QuizCard extends StatefulWidget {
   final PhraseEntity phrase;
   final List<PhraseEntity> allPhrases;
   final VoidCallback onContinue;
   final VoidCallback onSkip;
+  final VoidCallback? onCorrect;
+  final VoidCallback? onWrong;
 
   const QuizCard({
     super.key,
@@ -17,6 +20,8 @@ class QuizCard extends StatefulWidget {
     required this.allPhrases,
     required this.onContinue,
     required this.onSkip,
+    this.onCorrect,
+    this.onWrong,
   });
 
   @override
@@ -58,7 +63,7 @@ class _QuizCardState extends State<QuizCard>
 
   void _buildOptions() {
     final correct = widget.phrase.realMeaning;
-    final correctKw = _keywords(correct);
+    final correctKw = quizKeywords(correct);
 
     final others = widget.allPhrases
         .where((p) => p.id != widget.phrase.id)
@@ -69,10 +74,10 @@ class _QuizCardState extends State<QuizCard>
     for (final p in others) {
       if (wrongs.length >= 2) break;
       final candidate = p.realMeaning;
-      final candidateKw = _keywords(candidate);
+      final candidateKw = quizKeywords(candidate);
       // Skip if too similar to the correct answer or to already-chosen distractors
-      if (_jaccard(correctKw, candidateKw) > 0.35) continue;
-      if (wrongs.any((w) => _jaccard(_keywords(w), candidateKw) > 0.35)) continue;
+      if (jaccardSimilarity(correctKw, candidateKw) > 0.35) continue;
+      if (wrongs.any((w) => jaccardSimilarity(quizKeywords(w), candidateKw) > 0.35)) continue;
       wrongs.add(candidate);
     }
     // Fallback: fill remaining slots without similarity filter
@@ -90,18 +95,6 @@ class _QuizCardState extends State<QuizCard>
         .toList();
   }
 
-  Set<String> _keywords(String text) => text
-      .toLowerCase()
-      .replaceAll(RegExp(r'[^\wáéíóúüñ\s]'), '')
-      .split(RegExp(r'\s+'))
-      .where((w) => w.length > 3)
-      .toSet();
-
-  double _jaccard(Set<String> a, Set<String> b) {
-    if (a.isEmpty && b.isEmpty) return 0;
-    return a.intersection(b).length / a.union(b).length;
-  }
-
   bool get _isCorrectSelected =>
       _selectedIndex != null && _options[_selectedIndex!].isCorrect;
 
@@ -114,11 +107,17 @@ class _QuizCardState extends State<QuizCard>
   }
 
   void _onContinue() {
+    final wasCorrect = _isCorrectSelected;
     setState(() {
       _selectedIndex = null;
       _hasChecked = false;
     });
     _buildOptions();
+    if (wasCorrect) {
+      widget.onCorrect?.call();
+    } else {
+      widget.onWrong?.call();
+    }
     widget.onContinue();
   }
 

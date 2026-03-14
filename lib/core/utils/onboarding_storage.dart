@@ -9,12 +9,44 @@ class OnboardingStorage {
   static const String _timeKey = 'onboarding_time';
   static const String _levelKey = 'onboarding_level';
   static const String _sourceKey = 'onboarding_source';
+  static const String _levelStartKey = 'onboarding_level_start';
   static const String _todaySessionsPrefix = 'today_sessions';
   static const String _goalCelebratedPrefix = 'goal_celebrated';
 
   static String _todayStr() {
+    // Zero-padded para garantizar orden lexicográfico correcto y
+    // evitar colisiones entre claves antiguas (ej: "2026-1-1" vs "2026-01-01")
     final now = DateTime.now();
-    return '${now.year}-${now.month}-${now.day}';
+    final mm = now.month.toString().padLeft(2, '0');
+    final dd = now.day.toString().padLeft(2, '0');
+    return '${now.year}-$mm-$dd';
+  }
+
+  /// Elimina claves de sesión y celebración más antiguas que [keepDays] días.
+  /// Llama esto en el arranque (ej: en main) para evitar que SharedPreferences
+  /// crezca indefinidamente con 365+ claves de días pasados.
+  static Future<void> cleanupStaleSessionKeys({int keepDays = 7}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now();
+    final keys = prefs.getKeys().where((k) =>
+        k.startsWith(_todaySessionsPrefix) ||
+        k.startsWith(_goalCelebratedPrefix));
+
+    for (final key in keys) {
+      // Extraer la fecha del sufijo "prefix_YYYY-MM-DD"
+      final suffix = key.contains('_') ? key.split('_').last : null;
+      if (suffix == null) continue;
+      final parts = suffix.split('-');
+      if (parts.length != 3) continue;
+      final year = int.tryParse(parts[0]);
+      final month = int.tryParse(parts[1]);
+      final day = int.tryParse(parts[2]);
+      if (year == null || month == null || day == null) continue;
+      final keyDate = DateTime(year, month, day);
+      if (today.difference(keyDate).inDays > keepDays) {
+        await prefs.remove(key);
+      }
+    }
   }
 
   static int _goalSessionsFromTime(String? time) {
@@ -63,6 +95,7 @@ class OnboardingStorage {
     String? goal,
     String? time,
     String? level,
+    String? levelStart,
     String? source,
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -70,7 +103,23 @@ class OnboardingStorage {
     if (goal != null) await prefs.setString(_goalKey, goal);
     if (time != null) await prefs.setString(_timeKey, time);
     if (level != null) await prefs.setString(_levelKey, level);
+    if (levelStart != null) await prefs.setString(_levelStartKey, levelStart);
     if (source != null) await prefs.setString(_sourceKey, source);
+  }
+
+  static const Map<String, String> _levelStartingCategory = {
+    'Intermedio': 'Nivel 31',
+    'Avanzado': 'Nivel 61',
+  };
+
+  /// Returns the category name to start from based on level + levelStart preference.
+  /// Returns null if the user should start from the default (Nivel 1).
+  static Future<String?> getStartingCategoryName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final level = prefs.getString(_levelKey);
+    final levelStart = prefs.getString(_levelStartKey);
+    if (levelStart != 'mi_nivel') return null;
+    return _levelStartingCategory[level];
   }
 
   static Future<String?> getGoal() async {

@@ -269,7 +269,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 'Categoría: ${phrase.category}',
-                style: TextStyle(fontSize: 14, color: Colors.blue[300]),
+                style: const TextStyle(fontSize: 14, color: Color(0xFF9C95FF)),
               ),
             ),
             trailing: Row(
@@ -277,7 +277,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               children: [
                 IconButton(
                   onPressed: () => _ttsService.speak(phrase.english),
-                  icon: const Icon(Icons.volume_up, color: Colors.blue),
+                  icon: const Icon(Icons.volume_up, color: Color(0xFF6C63FF)),
                 ),
                 IconButton(
                   onPressed: () => _removeFromFavorites(index),
@@ -458,7 +458,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.2),
+                        color: const Color(0xFF6C63FF).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -466,8 +466,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         style: TextStyle(
                           fontSize: 12,
                           color: isDark
-                              ? Colors.blue.shade300
-                              : Colors.blue.shade700,
+                              ? const Color(0xFF9C95FF)
+                              : const Color(0xFF5248CC),
                         ),
                       ),
                     ),
@@ -477,7 +477,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           _ttsService.speak(contextItem.englishExample),
                       icon: const Icon(
                         Icons.volume_up,
-                        color: Colors.blue,
+                        color: Color(0xFF6C63FF),
                         size: 22,
                       ),
                     ),
