@@ -10,18 +10,34 @@ class AdProvider with ChangeNotifier {
 
   int _cardsViewedCount = 0;
   bool _isLoadingAd = false;
+  bool _isPremium = false;
 
   // Para Banner Ads
   final Map<int, BannerAd?> _bannerAds = {};
   final Set<int> _loadedAdIndices = {};
 
   int get cardsViewedCount => _cardsViewedCount;
-  bool get shouldShowAd => _cardsViewedCount >= 13;
+  bool get shouldShowAd => !_isPremium && _cardsViewedCount >= 13;
   bool get isLoadingAd => _isLoadingAd;
+  bool get isPremium => _isPremium;
 
   // Obtener Banner Ad por índice
-  BannerAd? getBannerAd(int index) => _bannerAds[index];
-  bool isBannerAdLoaded(int index) => _loadedAdIndices.contains(index);
+  BannerAd? getBannerAd(int index) => _isPremium ? null : _bannerAds[index];
+  bool isBannerAdLoaded(int index) =>
+      !_isPremium && _loadedAdIndices.contains(index);
+
+  void setPremium(bool value) {
+    if (_isPremium == value) return;
+    _isPremium = value;
+    if (value) {
+      for (final ad in _bannerAds.values) {
+        ad?.dispose();
+      }
+      _bannerAds.clear();
+      _loadedAdIndices.clear();
+    }
+    notifyListeners();
+  }
 
   AdProvider() {
     _initialize();
@@ -34,6 +50,7 @@ class AdProvider with ChangeNotifier {
   }
 
   void incrementCardView() {
+    if (_isPremium) return;
     _cardsViewedCount++;
     // Solo notificar cuando cambia shouldShowAd (al cruzar el umbral de 13)
     if (_cardsViewedCount == 13) {
@@ -84,6 +101,7 @@ class AdProvider with ChangeNotifier {
 
   /// Cargar Banner Ad para un índice específico
   void loadBannerAd(int index) {
+    if (_isPremium) return;
     if (_loadedAdIndices.contains(index)) return;
 
     try {

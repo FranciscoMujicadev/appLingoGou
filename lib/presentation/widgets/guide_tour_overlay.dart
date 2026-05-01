@@ -84,7 +84,7 @@ class GuideTourOverlay extends StatelessWidget {
                               style: const TextStyle(
                                 color: Color(0xFF6366F1),
                                 fontWeight: FontWeight.w900,
-                                fontSize: 10,
+                                fontSize: 9.5,
                                 letterSpacing: -0.5,
                               ),
                             ),
@@ -103,7 +103,7 @@ class GuideTourOverlay extends StatelessWidget {
                         step.title,
                         style: const TextStyle(
                           color: Color(0xFF111827),
-                          fontSize: 20,
+                          fontSize: 19.5,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -112,7 +112,7 @@ class GuideTourOverlay extends StatelessWidget {
                         step.description,
                         style: const TextStyle(
                           color: Color(0xFF6B7280),
-                          fontSize: 14,
+                          fontSize: 13.5,
                           height: 1.5,
                         ),
                       ),
@@ -149,7 +149,7 @@ class GuideTourOverlay extends StatelessWidget {
                                     style: TextStyle(
                                       color: Color(0xFF9CA3AF),
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 11.5,
                                     ),
                                   ),
                                 ),
@@ -178,7 +178,7 @@ class GuideTourOverlay extends StatelessWidget {
                                           : 'Siguiente',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w900,
-                                        fontSize: 12,
+                                        fontSize: 11.5,
                                         letterSpacing: 0.5,
                                       ),
                                     ),

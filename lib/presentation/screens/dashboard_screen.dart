@@ -6,19 +6,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/phrases_provider.dart';
 import '../providers/stats_provider.dart';
+import '../../core/models/module_model.dart';
+import '../../domain/entities/category_entity.dart';
 import '../../core/utils/onboarding_storage.dart';
 import '../../providers/theme_provider.dart';
+import '../widgets/breadcrumb_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final AppModule module;
   final VoidCallback onGoToLearn;
   final VoidCallback onGoToStories;
   final VoidCallback onGoToFavorites;
+  final VoidCallback onBack;
 
   const DashboardScreen({
     super.key,
+    required this.module,
     required this.onGoToLearn,
     required this.onGoToStories,
     required this.onGoToFavorites,
+    required this.onBack,
   });
 
   @override
@@ -28,10 +35,18 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
 
+  // Alignment.x values for the zigzag path
+  static const List<double> _nodeAlignX = [
+    0.0, 0.55, 0.8, 0.55, 0.0, -0.55, -0.8, -0.55, 0.0, 0.55,
+  ];
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToActive());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<PhrasesProvider>();
+      _scrollToActive(_filteredCats(provider.categories));
+    });
   }
 
   @override
@@ -40,15 +55,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.dispose();
   }
 
-  void _scrollToActive() {
+  List<CategoryEntity> _filteredCats(List<CategoryEntity> cats) {
+    return cats.where((c) {
+      final match = RegExp(r'\d+').firstMatch(c.name);
+      if (match == null) return false;
+      return widget.module.containsLevel(int.parse(match.group(0)!));
+    }).toList();
+  }
+
+  void _scrollToActive(List<CategoryEntity> filteredCats) {
     if (!mounted || !_scrollController.hasClients) return;
     final provider = context.read<PhrasesProvider>();
-    final match = RegExp(r'\d+').firstMatch(provider.selectedCategory);
-    if (match == null) return;
-    final levelNumber = int.parse(match.group(0)!);
-    if (levelNumber <= 1) return;
+    final activeIdx =
+        filteredCats.indexWhere((c) => c.name == provider.selectedCategory);
+    if (activeIdx <= 0) return;
 
-    // Approximate layout heights
     const headerH = 80.0;
     const bannerH = 52.0;
     const bannerGap = 24.0;
@@ -56,15 +77,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const sectionEndGap = 12.0;
     const nodesPerSection = 10;
 
-    final sectionIndex = (levelNumber - 1) ~/ nodesPerSection;
-    final nodeInSection = (levelNumber - 1) % nodesPerSection;
+    final sectionIndex = activeIdx ~/ nodesPerSection;
+    final nodeInSection = activeIdx % nodesPerSection;
 
     double offset = headerH;
-    offset += sectionIndex * (bannerH + bannerGap + nodesPerSection * nodeH + sectionEndGap);
+    offset +=
+        sectionIndex * (bannerH + bannerGap + nodesPerSection * nodeH + sectionEndGap);
     offset += bannerH + bannerGap;
     offset += nodeInSection * nodeH;
-    // Subtract a bit so the node isn't right at the edge
-    offset = (offset - 60).clamp(0.0, _scrollController.position.maxScrollExtent);
+    offset = (offset - 60)
+        .clamp(0.0, _scrollController.position.maxScrollExtent);
 
     _scrollController.animateTo(
       offset,
@@ -72,37 +94,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       curve: Curves.easeOut,
     );
   }
-
-  static const List<String> _sectionTitles = [
-    'Saludos y presentaciones',
-    'Vocabulario básico',
-    'Gramática esencial',
-    'Conversación cotidiana',
-    'Expresiones comunes',
-    'Vocabulario avanzado',
-    'Situaciones reales',
-    'Fluidez y naturalidad',
-    'Comprensión avanzada',
-    'Dominio del inglés',
-  ];
-
-  static const List<Color> _sectionColors = [
-    Color(0xFF58CC02),
-    Color(0xFF6C63FF),
-    Color(0xFF1CB0F6),
-    Color(0xFFFF9600),
-    Color(0xFFFF4B4B),
-    Color(0xFF2AC3A2),
-    Color(0xFFCE82FF),
-    Color(0xFFFFC107),
-    Color(0xFF9B59B6),
-    Color(0xFF3498DB),
-  ];
-
-  // Alignment.x values for each position in a section (-1 = left, 0 = center, 1 = right)
-  static const List<double> _nodeAlignX = [
-    0.0, 0.55, 0.8, 0.55, 0.0, -0.55, -0.8, -0.55, 0.0, 0.55,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -129,27 +120,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
               });
             }
 
-            final cats = phrasesProvider.categories;
+            final filteredCats = _filteredCats(phrasesProvider.categories);
             final current = phrasesProvider.selectedCategory;
             final explored = statsProvider.exploredCategories;
             final numPhrases = phrasesProvider.currentPhrases.length;
             final totalPages = numPhrases > 0 ? numPhrases * 5 + 1 : 0;
+            final sections = widget.module.sections;
 
-            // Specs: lightweight data, no Widgets built yet
             final specs = <_DashSpec>[];
             specs.add(const _HeaderSpec());
-            for (int s = 0; s < 10; s++) {
+
+            for (int s = 0; s < sections.length; s++) {
               final start = s * 10;
-              if (start >= cats.length) break;
-              final end = math.min(start + 10, cats.length);
+              if (start >= filteredCats.length) break;
+              final end = math.min(start + 10, filteredCats.length);
               specs.add(_BannerSpec(s));
               specs.add(const _GapSpec(24));
               for (int i = 0; i < end - start; i++) {
                 final idx = start + i;
-                final name = cats[idx].name;
+                final name = filteredCats[idx].name;
                 final isActive = name == current;
                 final isCompleted = explored.contains(name) && !isActive;
-                final maxReached = phrasesProvider.getProgressForCategory(name);
+                final maxReached =
+                    phrasesProvider.getProgressForCategory(name);
                 final progress = isActive && totalPages > 0
                     ? (maxReached / totalPages).clamp(0.0, 1.0)
                     : 0.0;
@@ -173,25 +166,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
               itemBuilder: (ctx, i) {
                 final spec = specs[i];
                 if (spec is _HeaderSpec) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                    child: _Header(isDark: isDark, textColor: textColor),
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+                        child: _Header(
+                          isDark: isDark,
+                          textColor: textColor,
+                          module: widget.module,
+                          onBack: widget.onBack,
+                        ),
+                      ),
+                      BreadcrumbBar(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                        segments: [
+                          BreadcrumbSegment(
+                            label: 'Módulos',
+                            icon: Icons.apps_rounded,
+                            onTap: widget.onBack,
+                          ),
+                          BreadcrumbSegment(label: widget.module.name),
+                        ],
+                      ),
+                    ],
                   );
                 }
                 if (spec is _GapSpec) return SizedBox(height: spec.height);
                 if (spec is _BannerSpec) {
+                  final section = sections[spec.section];
                   return _SectionBanner(
                     number: spec.section + 1,
-                    title: _sectionTitles[spec.section],
-                    color: _sectionColors[spec.section],
+                    title: section.title,
+                    color: section.color,
                   );
                 }
                 if (spec is _NodeSpec) {
+                  final sectionColor = sections[spec.sectionIdx].color;
                   return _LevelNodeRow(
                     levelNumber: spec.levelNumber,
                     isActive: spec.isActive,
                     isCompleted: spec.isCompleted,
-                    sectionColor: _sectionColors[spec.sectionIdx],
+                    sectionColor: sectionColor,
                     alignX: _nodeAlignX[spec.nodeInSection % _nodeAlignX.length],
                     isDark: isDark,
                     progress: spec.progress,
@@ -259,21 +274,63 @@ class _NodeSpec extends _DashSpec {
 class _Header extends StatelessWidget {
   final bool isDark;
   final Color textColor;
-  const _Header({required this.isDark, required this.textColor});
+  final AppModule module;
+  final VoidCallback onBack;
+
+  const _Header({
+    required this.isDark,
+    required this.textColor,
+    required this.module,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          'LingoGou',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: textColor,
+        GestureDetector(
+          onTap: onBack,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: isDark
+                  ? const Color(0xFF2D2D4E)
+                  : const Color(0xFFE5E5EA),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.arrow_back_rounded,
+              color: textColor,
+              size: 20,
+            ),
           ),
         ),
-        const Spacer(),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                module.name,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 17.5,
+                  fontWeight: FontWeight.w800,
+                  color: textColor,
+                ),
+              ),
+              Text(
+                '${module.endLevel - module.startLevel + 1} niveles',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11.5,
+                  color: isDark
+                      ? const Color(0xFF8E8E93)
+                      : const Color(0xFF6C6C70),
+                ),
+              ),
+            ],
+          ),
+        ),
         Consumer<ThemeProvider>(
           builder: (context, themeProvider, _) {
             return GestureDetector(
@@ -333,12 +390,12 @@ class _SectionBanner extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'SECCIÓN $number',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
+              title.toUpperCase(),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
-                letterSpacing: 1.5,
+                letterSpacing: 1.2,
               ),
             ),
           ),
@@ -354,8 +411,8 @@ class _SectionBanner extends StatelessWidget {
             ),
             child: Text(
               'GUÍA',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 12,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 11.5,
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
                 letterSpacing: 1.0,
@@ -424,8 +481,8 @@ class _LevelNodeRow extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 'Nivel $levelNumber',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 12,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: labelColor,
                 ),
@@ -469,8 +526,8 @@ class _StartBubble extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 13.5,
               fontWeight: FontWeight.w800,
               color: color,
               letterSpacing: 0.5,
@@ -552,7 +609,7 @@ class _NodeCircle extends StatelessWidget {
           ],
         ),
         child: const Center(
-          child: Text('⭐', style: TextStyle(fontSize: 28)),
+          child: Text('⭐', style: TextStyle(fontSize: 27.5)),
         ),
       );
     }
@@ -578,7 +635,6 @@ class _NodeCircle extends StatelessWidget {
       );
     }
 
-    // Upcoming / locked
     final lockBg = isDark ? const Color(0xFF1C1C2E) : Colors.white;
     final lockBorder = isDark ? const Color(0xFF2D2D4E) : const Color(0xFFDDDDE5);
     final lockShadow = isDark ? const Color(0xFF0A0A15) : const Color(0xFFBBBBC4);
@@ -624,20 +680,21 @@ class _GoalCelebrationDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🏆', style: TextStyle(fontSize: 64)),
+            const Text('🏆', style: TextStyle(fontSize: 63.5)),
             const SizedBox(height: 16),
             Text(
               '¡Lo lograste!',
               textAlign: TextAlign.center,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 24,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 23.5,
                 fontWeight: FontWeight.w800,
                 color: const Color(0xFF333333),
               ),
             ),
             const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               decoration: BoxDecoration(
                 color: const Color(0xFFDDF4C1),
                 borderRadius: BorderRadius.circular(12),
@@ -645,8 +702,8 @@ class _GoalCelebrationDialog extends StatelessWidget {
               child: Text(
                 timeLabel,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 18,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 17.5,
                   fontWeight: FontWeight.w800,
                   color: const Color(0xFF3A8C00),
                 ),
@@ -656,8 +713,8 @@ class _GoalCelebrationDialog extends StatelessWidget {
             Text(
               '¡Completaste tu práctica de hoy!\nSigue explorando si quieres más.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13.5,
                 color: const Color(0xFF666666),
                 height: 1.5,
               ),
@@ -683,8 +740,8 @@ class _GoalCelebrationDialog extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     '¡GENIAL!',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 15.5,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                       letterSpacing: 0.8,

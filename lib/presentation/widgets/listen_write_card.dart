@@ -148,8 +148,8 @@ class _ListenWriteCardState extends State<ListenWriteCard> {
                   // Title
                   Text(
                     'Escucha y escribe',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 22,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 21.5,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                     ),
@@ -232,8 +232,8 @@ class _ListenWriteCardState extends State<ListenWriteCard> {
                     ),
                     child: Text(
                       'SALTAR',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 14,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w700,
                         color: isDark ? Colors.white54 : Colors.black38,
                         letterSpacing: 0.8,
@@ -293,7 +293,7 @@ class _CharacterWidget extends StatelessWidget {
               border: Border.all(color: const Color(0xFFE8A87C), width: 1.5),
             ),
             child:
-                const Center(child: Text('🎧', style: TextStyle(fontSize: 18))),
+                const Center(child: Text('🎧', style: TextStyle(fontSize: 17.5))),
           ),
           const SizedBox(height: 4),
           Container(
@@ -376,7 +376,7 @@ class _AudioButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 9.5,
                   fontWeight: FontWeight.w600,
                   color: color,
                 ),
@@ -440,15 +440,15 @@ class _InputArea extends StatelessWidget {
         controller: controller,
         enabled: enabled,
         maxLines: 3,
-        style: GoogleFonts.inter(
-          fontSize: 16,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 15.5,
           fontWeight: FontWeight.w500,
           color: isDark ? Colors.white : const Color(0xFF1A1A2E),
         ),
         decoration: InputDecoration(
           hintText: 'Escribe lo que escuchas...',
-          hintStyle: GoogleFonts.inter(
-            fontSize: 15,
+          hintStyle: GoogleFonts.plusJakartaSans(
+            fontSize: 14.5,
             color: isDark ? Colors.white24 : Colors.black26,
           ),
           contentPadding:
@@ -502,8 +502,8 @@ class _FeedbackBox extends StatelessWidget {
               Expanded(
                 child: Text(
                   isCorrect ? '¡Bien hecho! Significa:' : 'La respuesta correcta:',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w700,
                     color: color,
                   ),
@@ -515,8 +515,8 @@ class _FeedbackBox extends StatelessWidget {
           if (!isCorrect) ...[
             Text(
               correctText,
-              style: GoogleFonts.inter(
-                fontSize: 15,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14.5,
                 fontWeight: FontWeight.w600,
                 color: color,
               ),
@@ -525,8 +525,8 @@ class _FeedbackBox extends StatelessWidget {
           ],
           Text(
             spanishText,
-            style: GoogleFonts.inter(
-              fontSize: 14,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 13.5,
               color: color.withValues(alpha: 0.85),
               fontStyle: FontStyle.italic,
             ),
@@ -594,8 +594,8 @@ class _ActionButton extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           label,
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 15,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 14.5,
             fontWeight: FontWeight.w700,
             color: fg,
             letterSpacing: 0.8,

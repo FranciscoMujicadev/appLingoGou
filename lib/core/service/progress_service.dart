@@ -17,17 +17,23 @@ class ProgressService {
     }
 
     final Map<String, dynamic> progressMap = json.decode(progressJson);
-    return progressMap.map(
+    final progress = progressMap.map(
       (key, value) => MapEntry(
         key,
         DayProgressModel.fromJson(value as Map<String, dynamic>),
       ),
     );
+
+    // Usuarios con progreso antiguo no tendrán los niveles Business English.
+    _ensureBusinessLevels(progress);
+
+    return progress;
   }
 
   Map<String, DayProgressModel> _initializeProgress() {
     final progress = <String, DayProgressModel>{};
 
+    // Módulo Inglés Coloquial (1-100)
     for (int i = 1; i <= 100; i++) {
       progress['Nivel $i'] = DayProgressModel(
         dayId: 'Nivel $i',
@@ -35,7 +41,29 @@ class ProgressService {
       );
     }
 
+    // Módulo Business English (101-120) — nivel 101 desbloqueado de entrada
+    for (int i = 101; i <= 120; i++) {
+      progress['Nivel $i'] = DayProgressModel(
+        dayId: 'Nivel $i',
+        isUnlocked: i == 101,
+      );
+    }
+
     return progress;
+  }
+
+  /// Garantiza que todos los niveles Business English existen en el mapa.
+  /// Útil cuando el usuario ya tenía progreso guardado antes de que
+  /// se añadiese el módulo.
+  void _ensureBusinessLevels(Map<String, DayProgressModel> progress) {
+    for (int i = 101; i <= 120; i++) {
+      if (!progress.containsKey('Nivel $i')) {
+        progress['Nivel $i'] = DayProgressModel(
+          dayId: 'Nivel $i',
+          isUnlocked: i == 101,
+        );
+      }
+    }
   }
 
   Future<void> saveProgress(Map<String, DayProgressModel> progress) async {
@@ -78,7 +106,7 @@ class ProgressService {
     );
 
     final dayNumber = int.tryParse(dayId.replaceAll('Nivel ', ''));
-    if (dayNumber != null && dayNumber < 100) {
+    if (dayNumber != null) {
       final nextDayId = 'Nivel ${dayNumber + 1}';
       final nextDay = progress[nextDayId];
       if (nextDay != null) {
@@ -106,8 +134,7 @@ class ProgressService {
   Future<String> getFirstUnlockedDay() async {
     final progress = await getProgress();
 
-    // CAMBIO AQUÍ: Buscar entre 7 días
-    for (var i = 1; i <= 100; i++) {
+    for (var i = 1; i <= 120; i++) {
       final dayId = 'Nivel $i';
       final dayProgress = progress[dayId];
       if (dayProgress != null &&
@@ -132,9 +159,8 @@ class ProgressService {
       completedAt: DateTime.now(),
     );
 
-    // CAMBIO AQUÍ: Ahora permite hasta 7 días
     final dayNumber = int.tryParse(currentDay.replaceAll('Nivel ', ''));
-    if (dayNumber != null && dayNumber < 100) {
+    if (dayNumber != null) {
       final nextDayId = 'Nivel ${dayNumber + 1}';
       final nextDay = progress[nextDayId];
       if (nextDay != null) {

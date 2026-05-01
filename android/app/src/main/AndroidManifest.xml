@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.avanza.lingogoucards">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     
     <!-- Permisos necesarios para anuncios -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,10 +10,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         
-        <!-- 🔑 CONFIGURACIÓN DE ADMOB CON TU APP ID -->
+        <!-- AdMob App ID — valor inyectado vía manifestPlaceholders en build.gradle.kts -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4091749681327331~9235807903"/>
+            android:value="${admobAppId}"/>
         
         
         <activity

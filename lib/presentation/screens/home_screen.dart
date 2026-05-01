@@ -11,8 +11,8 @@ import '../providers/phrases_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/auth_provider.dart';
-import '../../providers/ad_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/ad_provider.dart';
 import '../widgets/lingo_mascot.dart';
 import '../widgets/phrase_card.dart';
 import '../widgets/quiz_card.dart';
@@ -21,6 +21,10 @@ import '../widgets/listen_write_card.dart';
 import '../../domain/entities/favorite_context_entity.dart';
 import '../../providers/guide_tour_provider.dart';
 import '../widgets/guide_tour_overlay.dart';
+import '../widgets/breadcrumb_bar.dart';
+import '../widgets/business_term_card.dart';
+import '../widgets/business_scenario_card.dart';
+import 'main_navigation_screen.dart';
 
 
 
@@ -39,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isTogglingFavorite = false;
   bool _isTogglingContextFavorite = false;
   int _currentCardType = 0; // 0=phrase, 1=examples, 2=quiz, 3=dialogue, -1=challenge
-  final Set<String> _shownMilestones = {};
 
   final Map<String, Map<String, String>> _explanations = {
     "will": {
@@ -320,17 +323,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     phrasesProvider.changePage(index);
 
-    // ── Milestone: tras completar 2 frases (página 10 = inicio frase 3) ──
-    if (index == 10) {
-      final milestoneKey = '${phrasesProvider.selectedCategory}_2ph';
-      if (!_shownMilestones.contains(milestoneKey)) {
-        _shownMilestones.add(milestoneKey);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showMilestoneDialog(phrasesCompleted: 2);
-        });
-      }
-    }
-
     final totalPages = (phrasesProvider.currentPhrases.length * 5) + 1;
     final currentDayNumber = phrasesProvider.selectedCategory.replaceAll(
       'Nivel ',
@@ -385,11 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.video_library,
-                    color: Colors.amber,
-                    size: 64,
-                  ),
+                  const Icon(Icons.video_library, color: Colors.amber, size: 64),
                   const SizedBox(height: 16),
                   const Text(
                     '¡Para continuar aprendiendo gratis, ve el siguiente anuncio.',
@@ -418,10 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: const Icon(
-                      Icons.play_circle_filled,
-                      color: Colors.black,
-                    ),
+                    icon: const Icon(Icons.play_circle_filled, color: Colors.black),
                     label: const Text(
                       'Ver anuncio',
                       style: TextStyle(
@@ -510,6 +495,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<bool> _showChallengeConfirmationDialog(String previousDay) async {
+    final isBusiness =
+        MainNavigationScreen.currentModule?.id == 'business_interviews';
+
+    final dialogContent = isBusiness
+        ? '¿Usaste alguno de estos términos en un email, reunión o conversación profesional?\n\nPracticar en contexto real es lo que marca la diferencia.'
+        : '¿Pusiste en práctica lo aprendido en una situación real con familiares o amigos?\n\nEs importante practicar para aprender mejor.';
+
     final confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -532,8 +524,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         content: Text(
-          '¿Usaste los idioms del $previousDay en situaciones reales con tus familiares o amigos?\n\nEs importante practicar para aprender mejor.',
-          style: const TextStyle(color: Colors.white70, fontSize: 15),
+          dialogContent,
+          style: const TextStyle(color: Colors.white70, fontSize: 14.5),
         ),
         actions: [
           TextButton(
@@ -544,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text(
-              '¡Sí, los usé!',
+              '¡Sí, lo usé!',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -621,7 +613,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         contraction.toUpperCase(),
                         style: const TextStyle(
-                          fontSize: 28,
+                          fontSize: 27.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -659,7 +651,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Forma completa:',
                             style: TextStyle(
                               color: Color(0xB3FFFFFF),
-                              fontSize: 14,
+                              fontSize: 13.5,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -669,7 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         explanation['expansion']!,
                         style: const TextStyle(
-                          fontSize: 22,
+                          fontSize: 21.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.amber,
                         ),
@@ -699,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Explicación:',
                             style: TextStyle(
                               color: Color(0xB3FFFFFF),
-                              fontSize: 14,
+                              fontSize: 13.5,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -709,7 +701,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         explanation['explanation']!,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 15.5,
                           color: Colors.white,
                           height: 1.4,
                         ),
@@ -740,7 +732,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Ejemplo:',
                             style: TextStyle(
                               color: Color(0xB3FFFFFF),
-                              fontSize: 14,
+                              fontSize: 13.5,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -750,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         explanation['example']!,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 15.5,
                           color: Colors.white,
                           height: 1.4,
                           fontStyle: FontStyle.italic,
@@ -774,7 +766,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: const Text(
                       '¡Entendido!',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15.5,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -902,23 +894,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await _onCategoryChanged(nextDay);
   }
 
-  Future<void> _showMilestoneDialog({required int phrasesCompleted}) async {
-    if (!mounted) return;
-    final authProvider = context.read<AuthProvider>();
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => _MilestoneDialog(
-        phrasesCompleted: phrasesCompleted,
-        isSignedIn: authProvider.isSignedIn,
-        onSignIn: () {
-          Navigator.of(ctx).pop();
-          authProvider.signInWithGoogle();
-        },
-      ),
-    );
-  }
-
   Future<void> _showSectionCompleteDialog({
     required int section,
     required int level,
@@ -961,7 +936,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               '🎊 ¡Completaste todos los días!\n\n🌟 Has aprendido $totalIdioms idioms esenciales del inglés.\n\n💪 Sigue practicándolos en tu nivel a nivel para dominar el inglés como un nativo.',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: Colors.white),
+              style: const TextStyle(fontSize: 14.5, color: Colors.white),
             ),
           ],
         ),
@@ -1044,7 +1019,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           phrase.idiom,
                           style: TextStyle(
-                            fontSize: 21,
+                            fontSize: 20.5,
                             fontWeight: FontWeight.bold,
                             color: onSurface,
                             letterSpacing: 0.2,
@@ -1057,7 +1032,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '💡 ${phrase.realMeaning}',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14.5,
                       color: isDark
                           ? Colors.orange.shade200
                           : Colors.orange.shade700,
@@ -1092,7 +1067,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '📝 Ejemplos de uso en contexto',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       color: onSurface,
                       letterSpacing: 0.2,
@@ -1138,6 +1113,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final phrases = phrasesProvider.currentPhrases;
     final dayProgress = _progress[phrasesProvider.selectedCategory];
     final isCompleted = dayProgress?.isCompleted ?? false;
+    final isBusiness =
+        MainNavigationScreen.currentModule?.id == 'business_interviews';
 
     return Container(
       margin: const EdgeInsets.all(20),
@@ -1165,7 +1142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     '🎯 ¡Resumen del Nivel!',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 23.5,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -1183,7 +1160,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 'Hoy aprendiste ${phrases.length} frases nuevas con sus ejemplos contextuales. ¡Es hora de ponerlos en práctica!',
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 15.5,
                   color: Colors.white,
                   height: 1.5,
                 ),
@@ -1193,7 +1170,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Text(
               '📚 Idioms de hoy:',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17.5,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -1222,7 +1199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 15.5,
                         ),
                       ),
                     ),
@@ -1234,7 +1211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             phrase.idiom,
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 15.5,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -1243,7 +1220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             phrase.realMeaning,
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 12.5,
                               color: Color(0xB3FFFFFF),
                             ),
                           ),
@@ -1262,15 +1239,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange, width: 2),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.tips_and_updates, color: Colors.orange, size: 24),
-                  SizedBox(width: 12),
+                  const Icon(Icons.tips_and_updates, color: Colors.orange, size: 24),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Úsalos con tus papás, hermanos, amigos o en situaciones cotidianas.',
-                      style: TextStyle(
-                        fontSize: 14,
+                      isBusiness
+                          ? 'Usa estos términos en tu próximo email, reunión o entrevista — ahí es donde realmente se aprenden.'
+                          : 'Úsalos con tus papás, hermanos, amigos o en situaciones cotidianas.',
+                      style: const TextStyle(
+                        fontSize: 13.5,
                         color: Colors.white,
                         height: 1.4,
                       ),
@@ -1306,7 +1285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? '¡Nivel Completado!'
                           : 'Marcar como Completado',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -1340,9 +1319,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Pasar al Nivel ${dayNumber + 1}',
+                        'Pasar al siguiente nivel',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 17.5,
                           fontWeight: FontWeight.bold,
                           color: isCompleted ? Colors.blue : Colors.grey,
                         ),
@@ -1371,7 +1350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         '¡Ver Logro Final!',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 17.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -1415,48 +1394,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
 
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
                   child: Row(
                     children: [
                       Text(
                         'LingoGou',
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 21.5,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0x332196F3),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.calendar_today,
-                              color: Colors.blue,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Nivel $currentDayNumber',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -1498,6 +1447,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+                Builder(builder: (context) {
+                  final module = MainNavigationScreen.currentModule;
+                  final levelNum = int.tryParse(currentDayNumber) ?? 0;
+                  final sectionTitle = module?.sectionTitleForLevel(levelNum);
+                  return BreadcrumbBar(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                    segments: [
+                      BreadcrumbSegment(
+                        label: 'Módulos',
+                        icon: Icons.apps_rounded,
+                        onTap: () {
+                          MainNavigationScreen.clearModule();
+                          MainNavigationScreen.goTo(0);
+                        },
+                      ),
+                      BreadcrumbSegment(
+                        label: module?.name ?? 'Curso',
+                        onTap: () => MainNavigationScreen.goTo(0),
+                      ),
+                      if (sectionTitle != null)
+                        BreadcrumbSegment(label: sectionTitle),
+                    ],
+                  );
+                }),
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
@@ -1520,6 +1493,73 @@ class _HomeScreenState extends State<HomeScreen> {
                       final phrase =
                           phrasesProvider.currentPhrases[phraseIndex];
 
+                      // ── Business English: flujo propio ──────────────────
+                      final isBusiness =
+                          MainNavigationScreen.currentModule?.id ==
+                              'business_interviews';
+
+                      if (isBusiness) {
+                        void nextPage() => _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+
+                        // Página 0: término + definición
+                        if (cardType == 0) {
+                          return Consumer<FavoritesProvider>(
+                            builder: (context, favProvider, _) {
+                              return FutureBuilder<bool>(
+                                future: favProvider.isFavorite(phrase),
+                                builder: (context, snap) {
+                                  return BusinessTermCard(
+                                    key: ValueKey('bterm-${phrase.id}'),
+                                    phrase: phrase,
+                                    isFavorite: snap.data ?? false,
+                                    onSpeak: () =>
+                                        _ttsService.speak(phrase.english),
+                                    onToggleFavorite: () =>
+                                        _toggleFavorite(phrase),
+                                    onShare: () => _share(phrase),
+                                    onContinue: nextPage,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
+
+                        // Páginas 1-2: escenarios reales (solo los 2 primeros)
+                        if (cardType == 1 || cardType == 2) {
+                          final exIdx = cardType - 1; // 0 o 1
+                          final examples = phrase.contextExamples;
+                          if (exIdx < examples.length) {
+                            return BusinessScenarioCard(
+                              key: ValueKey('bscen-${phrase.id}-$exIdx'),
+                              example: examples[exIdx],
+                              termName: phrase.idiom,
+                              scenarioIndex: exIdx,
+                              totalScenarios: 2,
+                              onSpeak: () => _ttsService.speak(
+                                  examples[exIdx].englishExample),
+                              onContinue: nextPage,
+                            );
+                          }
+                          return const SizedBox();
+                        }
+
+                        // Páginas 3 y 4: quiz
+                        if (cardType == 3 || cardType == 4) {
+                          return QuizCard(
+                            key: ValueKey('quiz-${phrase.id}-$cardType'),
+                            phrase: phrase,
+                            allPhrases: phrasesProvider.currentPhrases,
+                            onContinue: nextPage,
+                            onSkip: nextPage,
+                          );
+                        }
+                      }
+
+                      // ── Flujo estándar (inglés coloquial y otros) ────────
                       if (cardType == 1) {
                         return _buildReadCard(_buildExamplesCard(phrase));
                       }
@@ -1638,8 +1678,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 child: Text(
                   'CONTINUAR',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 15,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
                     letterSpacing: 0.8,
@@ -1867,7 +1907,7 @@ class _ExampleCardState extends State<_ExampleCard> {
                   widget.example.context,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
                   ),
@@ -1910,7 +1950,7 @@ class _ExampleCardState extends State<_ExampleCard> {
           Text(
             widget.example.englishExample,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15.5,
               fontWeight: FontWeight.w700,
               color: isDark ? Colors.white : const Color(0xFF1A1A2E),
               height: 1.45,
@@ -1923,7 +1963,7 @@ class _ExampleCardState extends State<_ExampleCard> {
             Text(
               widget.pronunciation,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13.5,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.45)
                     : const Color(0xFF9CA3AF),
@@ -1937,7 +1977,7 @@ class _ExampleCardState extends State<_ExampleCard> {
           Text(
             widget.example.spanishExample,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14.5,
               fontWeight: FontWeight.w700,
               color: isDark
                   ? Colors.white.withValues(alpha: 0.85)
@@ -1993,7 +2033,7 @@ class _ExampleCardState extends State<_ExampleCard> {
                         Text(
                           contraction,
                           style: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                             letterSpacing: 0.3,
@@ -2006,230 +2046,6 @@ class _ExampleCardState extends State<_ExampleCard> {
               }).toList(),
             ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Milestone Dialog — tras completar N frases
-// ─────────────────────────────────────────────
-
-class _MilestoneDialog extends StatelessWidget {
-  final int phrasesCompleted;
-  final bool isSignedIn;
-  final VoidCallback? onSignIn;
-
-  const _MilestoneDialog({
-    required this.phrasesCompleted,
-    required this.isSignedIn,
-    this.onSignIn,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final title =
-        phrasesCompleted <= 2 ? '¡Increíble comienzo!' : '¡Gran progreso!';
-    final subtitle =
-        'Completaste tus primeras $phrasesCompleted frases con\ntodos sus ejercicios.';
-
-    return Dialog.fullscreen(
-      backgroundColor: Colors.white,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            // Confetti background
-            Positioned.fill(child: CustomPaint(painter: _ConfettiPainter())),
-            // Content
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const Spacer(flex: 2),
-                  const LingoMascot(size: 160),
-                  const SizedBox(height: 24),
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF58CC02),
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
-                      color: const Color(0xFF666666),
-                      height: 1.5,
-                    ),
-                  ),
-                  const Spacer(flex: 2),
-                  if (!isSignedIn) ...[
-                    _GuardaProgresoCard(onSignIn: onSignIn),
-                    const SizedBox(height: 14),
-                  ],
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF58CC02),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF58CC02).withValues(alpha: 0.4),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'CONTINUAR',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Guarda tu progreso card
-// ─────────────────────────────────────────────
-
-class _GuardaProgresoCard extends StatelessWidget {
-  final VoidCallback? onSignIn;
-  const _GuardaProgresoCard({this.onSignIn});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEEEBFF),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF7C5CFA).withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF7C5CFA).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.cloud_upload_rounded,
-                  color: Color(0xFF7C5CFA),
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '¡Guarda tu progreso!',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF4B2ECF),
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      'Crea una cuenta gratis y nunca pierdas tu avance.',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 13,
-                        color: const Color(0xFF555555),
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: onSignIn,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFFDDDDDD),
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Google G
-                  Container(
-                    width: 22,
-                    height: 22,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFDDDDDD)),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'G',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF4285F4),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Continuar con Google',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A1A),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -2264,13 +2080,13 @@ class _SectionCompleteDialog extends StatelessWidget {
               child: Column(
                 children: [
                   const Spacer(flex: 2),
-                  const Text('🏆', style: TextStyle(fontSize: 80)),
+                  const Text('🏆', style: TextStyle(fontSize: 79.5)),
                   const SizedBox(height: 20),
                   Text(
                     '¡Sección $section completada!',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 28,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 27.5,
                       fontWeight: FontWeight.w800,
                       color: const Color(0xFFF59E0B),
                       height: 1.2,
@@ -2280,8 +2096,8 @@ class _SectionCompleteDialog extends StatelessWidget {
                   Text(
                     'Completaste los niveles ${level - 9} al $level.\n¡Sigue así, vas por buen camino!',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 15.5,
                       color: const Color(0xFF666666),
                       height: 1.5,
                     ),
@@ -2351,8 +2167,8 @@ class _SectionCompleteDialog extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Text(
                         '¡SEGUIR APRENDIENDO!',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 16,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 15.5,
                           fontWeight: FontWeight.w800,
                           color: Colors.white,
                           letterSpacing: 0.8,
@@ -2386,20 +2202,20 @@ class _SectionStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
+        Text(icon, style: const TextStyle(fontSize: 23.5)),
         const SizedBox(height: 4),
         Text(
           value,
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 18,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 17.5,
             fontWeight: FontWeight.w800,
             color: const Color(0xFF1A1A1A),
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 12,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 11.5,
             color: const Color(0xFF888888),
           ),
         ),

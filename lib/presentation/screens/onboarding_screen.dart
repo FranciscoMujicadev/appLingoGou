@@ -230,8 +230,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     alignment: Alignment.center,
                     child: Text(
                       _step == 4 ? '¡EMPEZAR!' : 'CONTINUAR',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 16,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 15.5,
                         fontWeight: FontWeight.w800,
                         color: _canContinue
                             ? Colors.white
@@ -269,8 +269,8 @@ class _IntroStep extends StatelessWidget {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 18,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 17.5,
                   color: const Color(0xFF333333),
                   height: 1.45,
                 ),
@@ -329,8 +329,8 @@ class _OptionStep extends StatelessWidget {
               Expanded(
                 child: Text(
                   question,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 19,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18.5,
                     fontWeight: FontWeight.w800,
                     color: const Color(0xFF333333),
                     height: 1.3,
@@ -373,12 +373,12 @@ class _OptionStep extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Text(emoji, style: const TextStyle(fontSize: 24)),
+                      Text(emoji, style: const TextStyle(fontSize: 23.5)),
                       const SizedBox(width: 16),
                       Text(
                         label,
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 16,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 15.5,
                           fontWeight: FontWeight.w700,
                           color: isSelected
                               ? const Color(0xFF3A8C00)
@@ -432,8 +432,8 @@ class _TimeGoalStep extends StatelessWidget {
               Expanded(
                 child: Text(
                   '¿Cuál es tu meta diaria de aprendizaje?',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 19,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18.5,
                     fontWeight: FontWeight.w800,
                     color: const Color(0xFF333333),
                     height: 1.3,
@@ -478,8 +478,8 @@ class _TimeGoalStep extends StatelessWidget {
                     children: [
                       Text(
                         time,
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 17,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16.5,
                           fontWeight: FontWeight.w800,
                           color: isSelected
                               ? const Color(0xFF3A8C00)
@@ -493,8 +493,8 @@ class _TimeGoalStep extends StatelessWidget {
                       else
                         Text(
                           intensity,
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 14,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFFAAAAAA),
                           ),

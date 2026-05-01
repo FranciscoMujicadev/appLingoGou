@@ -22,7 +22,25 @@
       "Bash(git -C /c/lingogou/Englishappv2 log --all --full-history -S \"storePassword\\\\|keyPassword\" --oneline)",
       "Bash(grep -r \"password\\\\|secret\\\\|token\" c:lingogouEnglishappv2lib --include=*.dart)",
       "Bash(grep -r \"debugPrint\\\\|print\\(\" c:lingogouEnglishappv2lib --include=*.dart)",
-      "Bash(find c:lingogouEnglishappv2 -name .env* -o -name secrets* -o -name config.dart)"
+      "Bash(find c:lingogouEnglishappv2 -name .env* -o -name secrets* -o -name config.dart)",
+      "Bash(firebase projects:list)",
+      "Bash(flutterfire configure:*)",
+      "Bash(dart pub:*)",
+      "Bash(echo \"PATH=$PATH\")",
+      "Bash(\"$USERPROFILE/AppData/Local/Pub/Cache/bin/flutterfire.bat\" configure:*)",
+      "Bash(firebase login:*)",
+      "Bash(firebase apps:list ANDROID --project=lingogou-app-a5da9)",
+      "Bash(firebase apps:list --project=lingogou-app-a5da9)",
+      "Bash(firebase apps:sdkconfig ANDROID --project=lingogou-app-a5da9)",
+      "Bash(node -e \":*)",
+      "Bash(\"C:\\\\lingogou\\\\Englishappv2\\\\android\\\\local.properties\")",
+      "Bash(firebase deploy:*)",
+      "Bash(flutter pub:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(bash build_release.sh)",
+      "Bash(keytool -export -rfc -keystore \"C:\\\\Users\\\\franc\\\\lingogou-upload-keystore-v2.jks\" -alias upload -storepass \"F4CYfDR9TgZkhrH1GJad\" -file \"C:\\\\Users\\\\franc\\\\lingogou-upload-key-v2.pem\")",
+      "Bash(flutter devices:*)"
     ]
   }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../data/datasources/stories_data.dart';
 import '../../data/models/story_model.dart';
-import '../../providers/ad_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../widgets/story_card.dart';
 
@@ -30,22 +28,12 @@ class _StoriesPageState extends State<StoriesPage>
     super.initState();
     _filteredStories = StoriesData.getStoriesByLevel('Beginner');
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _loadBannerAd();
-      }
-    });
   }
 
   @override
   void dispose() {
-    _scrollController.dispose(); // 🆕 Limpiar el controller
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _loadBannerAd() {
-    final adProvider = context.read<AdProvider>();
-    adProvider.loadBannerAd(0);
   }
 
   void _filterStories(String filter) {
@@ -102,37 +90,6 @@ class _StoriesPageState extends State<StoriesPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Banner Ad fijo arriba
-            Consumer<AdProvider>(
-              builder: (context, adProvider, _) {
-                final bannerAd = adProvider.getBannerAd(0);
-                if (bannerAd != null && adProvider.isBannerAdLoaded(0)) {
-                  return Container(
-                    margin: const EdgeInsets.only(
-                      left: 24,
-                      right: 24,
-                      top: 16,
-                      bottom: 8,
-                    ),
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: theme.cardColor,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFF6FBAFF).withValues(alpha: 0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: AdWidget(ad: bannerAd),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-
             // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 16, 8, 16),
@@ -146,7 +103,7 @@ class _StoriesPageState extends State<StoriesPage>
                         Text(
                           'LingoGou',
                           style: TextStyle(
-                            fontSize: 26,
+                            fontSize: 25.5,
                             fontWeight: FontWeight.w700,
                             color: onSurface,
                             letterSpacing: -0.5,
@@ -156,7 +113,7 @@ class _StoriesPageState extends State<StoriesPage>
                         Text(
                           'Read and improve your English',
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 14.5,
                             fontWeight: FontWeight.w400,
                             color: onSurface.withValues(alpha: 0.5),
                           ),
@@ -197,7 +154,7 @@ class _StoriesPageState extends State<StoriesPage>
                   Text(
                     'Filter by',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w600,
                       color: onSurface.withValues(alpha: 0.5),
                       letterSpacing: -0.2,
@@ -243,7 +200,7 @@ class _StoriesPageState extends State<StoriesPage>
                           Text(
                             'No stories found',
                             style: TextStyle(
-                              fontSize: 17,
+                              fontSize: 16.5,
                               fontWeight: FontWeight.w500,
                               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
@@ -295,7 +252,7 @@ class _StoriesPageState extends State<StoriesPage>
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 14.5,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             color: isSelected
                 ? Colors.black

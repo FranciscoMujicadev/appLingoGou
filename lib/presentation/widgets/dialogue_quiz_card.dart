@@ -157,8 +157,8 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
                   // Title
                   Text(
                     'Completa el diálogo',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 22,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 21.5,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                     ),
@@ -179,8 +179,8 @@ class _DialogueQuizCardState extends State<DialogueQuizCard>
                       ),
                       child: Text(
                         _dialogueData.contextLabel,
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFF58CC02),
                         ),
@@ -331,7 +331,7 @@ class _CharacterAvatar extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 22)),
+          Text(emoji, style: const TextStyle(fontSize: 21.5)),
           const SizedBox(height: 4),
           Container(
             width: 28,
@@ -391,8 +391,8 @@ class _Bubble extends StatelessWidget {
 
     final content = Text(
       text,
-      style: GoogleFonts.inter(
-        fontSize: 15,
+      style: GoogleFonts.plusJakartaSans(
+        fontSize: 14.5,
         fontWeight: FontWeight.w500,
         color: textColor,
       ),
@@ -592,8 +592,8 @@ class _OptionChip extends StatelessWidget {
               child: Center(
                 child: Text(
                   '${index + 1}',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w700,
                     color: badgeColor,
                   ),
@@ -604,8 +604,8 @@ class _OptionChip extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: GoogleFonts.inter(
-                  fontSize: 15,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14.5,
                   fontWeight: FontWeight.w600,
                   color: textColor,
                 ),
@@ -675,8 +675,8 @@ class _FeedbackBanner extends StatelessWidget {
           Expanded(
             child: Text(
               isCorrect ? '¡Correcto! Muy bien.' : '¡Casi! Sigue practicando.',
-              style: GoogleFonts.inter(
-                fontSize: 15,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14.5,
                 fontWeight: FontWeight.w600,
                 color: isCorrect
                     ? const Color(0xFF58CC02)
@@ -763,8 +763,8 @@ class _BottomBar extends StatelessWidget {
               ),
               child: Text(
                 'SALTAR',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w700,
                   color: skipTextColor,
                   letterSpacing: 0.8,
@@ -788,8 +788,8 @@ class _BottomBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   actionLabel,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 15,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
                     color: actionText,
                     letterSpacing: 0.8,

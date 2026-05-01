@@ -147,8 +147,8 @@ class _QuizCardState extends State<QuizCard>
                   // Title
                   Text(
                     'Escoge el significado correcto',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 22,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 21.5,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                     ),
@@ -259,7 +259,7 @@ class _CharacterWidget extends StatelessWidget {
               ),
             ),
             child: const Center(
-              child: Text('😊', style: TextStyle(fontSize: 20)),
+              child: Text('😊', style: TextStyle(fontSize: 19.5)),
             ),
           ),
           const SizedBox(height: 4),
@@ -335,8 +335,8 @@ class _SpeechBubble extends StatelessWidget {
           ),
           child: Text(
             text,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 18,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 17.5,
               fontWeight: FontWeight.w600,
               color: isDark ? Colors.white : const Color(0xFF1A1A2E),
             ),
@@ -485,8 +485,8 @@ class _OptionButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   '${index + 1}',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w700,
                     color: badgeColor,
                   ),
@@ -498,8 +498,8 @@ class _OptionButton extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: GoogleFonts.inter(
-                  fontSize: 15,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14.5,
                   fontWeight: FontWeight.w500,
                   color: textColor,
                 ),
@@ -577,8 +577,8 @@ class _FeedbackBanner extends StatelessWidget {
               isCorrect
                   ? '¡Correcto! Muy bien.'
                   : '¡Casi! Sigue practicando.',
-              style: GoogleFonts.inter(
-                fontSize: 15,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14.5,
                 fontWeight: FontWeight.w600,
                 color: isCorrect
                     ? const Color(0xFF58CC02)
@@ -671,8 +671,8 @@ class _BottomBar extends StatelessWidget {
               ),
               child: Text(
                 'SALTAR',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w700,
                   color: skipTextColor,
                   letterSpacing: 0.8,
@@ -698,8 +698,8 @@ class _BottomBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   actionLabel,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 15,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
                     color: actionText,
                     letterSpacing: 0.8,

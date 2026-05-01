@@ -87,8 +87,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                     children: [
                       Text(
                         'Favoritos',
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 23.5,
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -207,12 +207,12 @@ class _FavoritesScreenState extends State<FavoritesScreen>
             const SizedBox(height: 16),
             Text(
               'No tienes frases favoritas',
-              style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey),
+              style: GoogleFonts.plusJakartaSans(fontSize: 17.5, color: Colors.grey),
             ),
             const SizedBox(height: 8),
             Text(
               'Ve al inicio y marca frases como favoritas',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 13.5, color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -241,8 +241,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               children: [
                 Text(
                   phrase.english,
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 19.5,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -251,15 +251,15 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                 Text(
                   phrase.spanish,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15.5,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   phrase.pronunciation,
-                  style: GoogleFonts.robotoMono(
-                    fontSize: 15,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14.5,
                     color: Colors.grey[500],
                   ),
                 ),
@@ -269,7 +269,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 'Categoría: ${phrase.category}',
-                style: const TextStyle(fontSize: 14, color: Color(0xFF9C95FF)),
+                style: const TextStyle(fontSize: 13.5, color: Color(0xFF9C95FF)),
               ),
             ),
             trailing: Row(
@@ -303,14 +303,14 @@ class _FavoritesScreenState extends State<FavoritesScreen>
             const SizedBox(height: 16),
             Text(
               'No tienes ejemplos favoritos',
-              style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey),
+              style: GoogleFonts.plusJakartaSans(fontSize: 17.5, color: Colors.grey),
             ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
                 'Ve a los ejemplos de uso y marca los que más te gusten',
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 13.5, color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -365,7 +365,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                   children: [
                     Text(
                       contextItem.emoji,
-                      style: const TextStyle(fontSize: 28),
+                      style: const TextStyle(fontSize: 27.5),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -374,8 +374,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         children: [
                           Text(
                             contextItem.phraseIdiom,
-                            style: GoogleFonts.poppins(
-                              fontSize: 21,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 20.5,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : onSurface,
                             ),
@@ -383,7 +383,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           Text(
                             contextItem.context,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 13.5,
                               color: isDark
                                   ? Colors.pink.shade200
                                   : Colors.pink.shade700,
@@ -410,7 +410,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       Text(
                         '"${contextItem.englishExample}"',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15.5,
                           color: isDark ? Colors.white : onSurface,
                           fontStyle: FontStyle.italic,
                           height: 1.4,
@@ -421,7 +421,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         Text(
                           '🗣️ ${contextItem.pronunciation}',
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 14.5,
                             color: isDark
                                 ? Colors.orange.shade300
                                 : Colors.orange.shade700,
@@ -438,7 +438,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                         child: Text(
                           '🇲🇽 ${contextItem.spanishExample}',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 13.5,
                             color: isDark
                                 ? Colors.white
                                 : Colors.green.shade800,
@@ -464,7 +464,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       child: Text(
                         contextItem.category,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 11.5,
                           color: isDark
                               ? const Color(0xFF9C95FF)
                               : const Color(0xFF5248CC),

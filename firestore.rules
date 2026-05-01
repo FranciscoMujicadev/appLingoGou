@@ -8,9 +8,13 @@ rules_version = '2';
 //     progress: { [categoryName]: maxPageIndex }
 //     favoritePhrases: [ ... ]
 //     favoriteContexts: [ ... ]
+//     onboardingCompleted: bool
+//     dayProgress: { [date]: sessionCount }
+//     isPremium: bool  ← SOLO ESCRITURA DESDE EL SERVIDOR (Admin SDK / Cloud Function)
 //
 // Regla principal: cada usuario solo puede leer y escribir SUS propios datos.
 // Nadie puede leer ni escribir datos de otro usuario.
+// isPremium NUNCA puede ser modificado por el cliente.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -21,7 +25,8 @@ service cloud.firestore {
 
       allow write: if request.auth != null
                    && request.auth.uid == uid
-                   && validateUserData(request.resource.data);
+                   && validateUserData(request.resource.data)
+                   && !isPremiumChanged(request.resource.data, resource);
     }
 
     // Deniega cualquier otra colección no declarada
@@ -31,10 +36,13 @@ service cloud.firestore {
   }
 }
 
-// Valida que el documento del usuario tenga la estructura correcta
+// Valida que el documento del usuario tenga la estructura y tipos correctos
 function validateUserData(data) {
   return (
-    data.keys().hasOnly(['stats', 'progress', 'favoritePhrases', 'favoriteContexts'])
+    data.keys().hasOnly([
+      'stats', 'progress', 'favoritePhrases', 'favoriteContexts',
+      'onboardingCompleted', 'dayProgress', 'isPremium'
+    ])
 
     && (!('stats' in data) || (
       data.stats is map
@@ -47,5 +55,20 @@ function validateUserData(data) {
 
     && (!('favoritePhrases' in data) || data.favoritePhrases is list)
     && (!('favoriteContexts' in data) || data.favoriteContexts is list)
+
+    && (!('onboardingCompleted' in data) || data.onboardingCompleted is bool)
+    && (!('dayProgress' in data) || data.dayProgress is map)
+    && (!('isPremium' in data) || data.isPremium is bool)
   );
+}
+
+// Devuelve true si el cliente intenta cambiar el valor de isPremium.
+// El Admin SDK (Cloud Function) bypasea estas reglas, por lo que solo
+// el servidor puede escribir isPremium=true.
+function isPremiumChanged(incomingData, currentDoc) {
+  let currentValue = currentDoc != null
+    ? currentDoc.data.get('isPremium', false)
+    : false;
+  return 'isPremium' in incomingData
+    && incomingData.isPremium != currentValue;
 }

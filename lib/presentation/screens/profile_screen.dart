@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../../providers/premium_provider.dart';
 import '../../providers/theme_provider.dart';
+import 'activate_premium_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -13,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final authProvider = context.watch<AuthProvider>();
     final themeProvider = context.watch<ThemeProvider>();
+    final premiumProvider = context.watch<PremiumProvider>();
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F7),
@@ -95,6 +98,27 @@ class ProfileScreen extends StatelessWidget {
                 onChanged: (_) => themeProvider.toggleTheme(),
                 activeColor: Theme.of(context).colorScheme.primary,
               ),
+            ),
+            const SizedBox(height: 12),
+
+            _buildOptionTile(
+              context: context,
+              icon: premiumProvider.isPremium
+                  ? Icons.verified_rounded
+                  : Icons.workspace_premium_rounded,
+              title: premiumProvider.isPremium
+                  ? 'Premium activo${premiumProvider.businessName != null ? ' · ${premiumProvider.businessName}' : ''}'
+                  : 'Activar Premium (sin anuncios)',
+              isDark: isDark,
+              iconColor: premiumProvider.isPremium ? Colors.green : null,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ActivatePremiumScreen(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 12),
 

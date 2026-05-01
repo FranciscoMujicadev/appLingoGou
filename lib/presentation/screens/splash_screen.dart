@@ -1,6 +1,7 @@
 // lib/presentation/screens/splash_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/utils/connectivity_service.dart';
 import '../../core/utils/onboarding_storage.dart';
 import 'main_navigation_screen.dart';
@@ -55,20 +56,20 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isCheckingConnection) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.black,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(color: Colors.white),
-              SizedBox(height: 20),
+              const CircularProgressIndicator(color: Colors.white),
+              const SizedBox(height: 20),
               Text(
                 'Verificando conexión...',
                 style: TextStyle(
-                  fontFamily: 'Roboto',
+                  fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 15.5,
                 ),
               ),
             ],
@@ -89,12 +90,12 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                 children: [
                   Icon(Icons.wifi_off, size: 100, color: Colors.red.shade400),
                   const SizedBox(height: 32),
-                  const Text(
+                  Text(
                     '¡Sin conexión a Internet!',
                     style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 23.5,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
@@ -103,9 +104,9 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                   Text(
                     'LingoGou requiere conexión a internet para funcionar correctamente.',
                     style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                       color: Colors.grey.shade400,
-                      fontSize: 16,
+                      fontSize: 15.5,
                       height: 1.5,
                     ),
                     textAlign: TextAlign.center,
@@ -128,12 +129,12 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                         ),
                       ),
                       icon: const Icon(Icons.refresh, color: Colors.white, size: 24),
-                      label: const Text(
+                      label: Text(
                         'Reintentar',
                         style: TextStyle(
-                          fontFamily: 'Roboto',
+                          fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 17.5,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -155,12 +156,12 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
                             Icon(Icons.info_outline,
                                 color: const Color(0xFF9C95FF), size: 20),
                             const SizedBox(width: 8),
-                            const Text(
+                            Text(
                               'Verifica:',
                               style: TextStyle(
-                                fontFamily: 'Roboto',
+                                fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 13.5,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -199,9 +200,9 @@ class _SplashDecisionScreenState extends State<SplashDecisionScreen> {
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: 'Roboto',
+                fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
                 color: Colors.grey.shade400,
-                fontSize: 13,
+                fontSize: 12.5,
               ),
             ),
           ),

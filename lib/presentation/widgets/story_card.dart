@@ -124,7 +124,7 @@ class _StoryCardState extends State<StoryCard>
                       child: Text(
                         widget.story.title,
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 21.5,
                           fontWeight: FontWeight.w700,
                           color: onSurface,
                           letterSpacing: -0.3,
@@ -199,7 +199,7 @@ class _StoryCardState extends State<StoryCard>
                     Text(
                       _showTranslation ? 'Show English' : 'Show Spanish',
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14.5,
                         fontWeight: FontWeight.w600,
                         color: levelColor,
                         letterSpacing: -0.2,
@@ -225,7 +225,7 @@ class _StoryCardState extends State<StoryCard>
                         ? widget.story.contentSpanish
                         : widget.story.content,
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 16.5,
                       fontWeight: FontWeight.w400,
                       color: onSurface,
                       height: 1.7,
@@ -249,7 +249,7 @@ class _StoryCardState extends State<StoryCard>
                       child: Text(
                         'Read more',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14.5,
                           fontWeight: FontWeight.w600,
                           color: levelColor,
                           letterSpacing: -0.2,
@@ -287,7 +287,7 @@ class _StoryCardState extends State<StoryCard>
                     Text(
                       _isReading ? 'Stop' : 'Listen',
                       style: const TextStyle(
-                        fontSize: 17,
+                        fontSize: 16.5,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                         letterSpacing: -0.2,
@@ -320,7 +320,7 @@ class _StoryCardState extends State<StoryCard>
           Text(
             text,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: FontWeight.w600,
               color: color,
               letterSpacing: -0.1,

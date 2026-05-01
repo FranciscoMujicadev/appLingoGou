@@ -102,8 +102,8 @@ class PhraseCard extends StatelessWidget {
                   Text(
                     phrase.idiom,
                     style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 30,
+                      fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
+                      fontSize: 29.5,
                       fontWeight: FontWeight.w700,
                       color: titleColor,
                       height: 1.15,
@@ -131,8 +131,8 @@ class PhraseCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           phrase.pronunciation,
-                          style: GoogleFonts.jetBrainsMono(
-                            fontSize: 16,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 15.5,
                             fontWeight: FontWeight.w400,
                             color: pronunciationColor,
                             letterSpacing: 0.3,
@@ -185,8 +185,8 @@ class PhraseCard extends StatelessWidget {
                               const SizedBox(width: 12),
                               Text(
                                 'Traducción Literal',
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
                                   color: labelColor,
                                   letterSpacing: 0.6,
@@ -197,8 +197,8 @@ class PhraseCard extends StatelessWidget {
                           const SizedBox(height: 14),
                           Text(
                             '"${phrase.literalTranslation}"',
-                            style: GoogleFonts.inter(
-                              fontSize: 15,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w400,
                               color: literalTextColor,
                               fontStyle: FontStyle.italic,
@@ -254,8 +254,8 @@ class PhraseCard extends StatelessWidget {
                               const SizedBox(width: 12),
                               Text(
                                 'Significado real',
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
                                   color: const Color(0xFF6C63FF),
                                   letterSpacing: 0.6,
@@ -266,8 +266,8 @@ class PhraseCard extends StatelessWidget {
                           const SizedBox(height: 14),
                           Text(
                             '"${phrase.spanish}"',
-                            style: GoogleFonts.spaceGrotesk(
-                              fontSize: 17,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 16.5,
                               fontWeight: FontWeight.w600,
                               color: meaningTextColor,
                               height: 1.5,

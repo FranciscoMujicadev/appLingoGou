@@ -1,3 +1,7 @@
+# Claude Code worktrees
+.claude/worktrees/
+.claude/settings.local.json
+
 # Miscellaneous
 *.class
 *.log
@@ -45,10 +49,7 @@ app.*.map.json
 /android/app/release
 
 # Archivos con secretos / claves de Firebase y servicios
-# NOTA: estos archivos YA están en el repositorio (commits anteriores).
-# Para eliminarlos del historial usa: git filter-repo o BFG Repo Cleaner.
-# Mientras tanto, si rotas las claves en Firebase Console, el historial
-# viejo queda inválido y el riesgo se reduce significativamente.
+# Historial limpiado con git filter-repo el 2026-04-01.
 # google-services.json       # Android Firebase config
 # lib/firebase_options.dart  # Firebase API keys para todas las plataformas
 # ios/Runner/GoogleService-Info.plist  # iOS Firebase config
@@ -67,3 +68,6 @@ android/key.properties
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
+
+# Script de compilación de release (contiene --dart-define con IDs reales)
+build_release.sh

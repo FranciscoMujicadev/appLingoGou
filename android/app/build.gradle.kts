@@ -22,14 +22,14 @@ if (keystorePropertiesFile.exists()) {
 
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
+    // Conecta con Firebase Google Services
     id("com.google.gms.google-services")
-    // END: FlutterFire Configuration
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
+    // Namespace corregido para coincidir con tu nuevo ID
     namespace = "com.avanza.lingogoucards"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
@@ -53,13 +53,19 @@ android {
     }
 
     defaultConfig {
+        // Tu nuevo ID oficial que registramos en Firebase
         applicationId = "com.avanza.lingogoucards"
         minSdk = 24
         targetSdk = 36
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
-        
+
         multiDexEnabled = true
+
+        manifestPlaceholders["admobAppId"] =
+            System.getenv("ADMOB_APP_ID")
+                ?: localProperties.getProperty("admob.appId")
+                ?: ""
     }
 
     buildTypes {

@@ -13,10 +13,9 @@ import '../providers/auth_provider.dart';
 import '../providers/phrases_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/stats_provider.dart';
-import '../../providers/ad_provider.dart';
-import '../../providers/guide_tour_provider.dart';
-import '../widgets/guide_tour_overlay.dart';
+import '../../core/models/module_model.dart';
 import 'dashboard_screen.dart';
+import 'module_selection_screen.dart';
 import 'home_screen.dart';
 import 'stories_page.dart';
 import 'favorites_screen.dart';
@@ -26,12 +25,27 @@ class MainNavigationScreen extends StatefulWidget {
   final String? initialCategory;
   const MainNavigationScreen({super.key, this.initialCategory});
 
+  // Controlador global para navegar desde cualquier pantalla hija.
+  static void Function(int index)? _goToStatic;
+  static void Function()? _clearModuleStatic;
+  static AppModule? Function()? _getModuleStatic;
+
+  /// Cambia la pestaña activa (0=Home/Dashboard, 1=Learn, 2=Stories, 3=Fav, 4=Perfil).
+  static void goTo(int index) => _goToStatic?.call(index);
+
+  /// Deselecciona el módulo actual (vuelve al selector de módulos).
+  static void clearModule() => _clearModuleStatic?.call();
+
+  /// Devuelve el módulo seleccionado (o null si no hay).
+  static AppModule? get currentModule => _getModuleStatic?.call();
+
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+  AppModule? _selectedModule;
   late AuthProvider _authProvider;
   bool _prevSignedIn = false;
 
@@ -40,6 +54,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
+    MainNavigationScreen._goToStatic = _goTo;
+    MainNavigationScreen._clearModuleStatic =
+        () => setState(() => _selectedModule = null);
+    MainNavigationScreen._getModuleStatic = () => _selectedModule;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authProvider = context.read<AuthProvider>();
       _prevSignedIn = _authProvider.isSignedIn;
@@ -51,6 +69,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   void dispose() {
+    MainNavigationScreen._goToStatic = null;
+    MainNavigationScreen._clearModuleStatic = null;
+    MainNavigationScreen._getModuleStatic = null;
     _authProvider.removeListener(_onAuthChanged);
     super.dispose();
   }
@@ -219,7 +240,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ChangeNotifierProvider(
           create: (_) => di.sl<StatsProvider>()..loadStats(),
         ),
-        ChangeNotifierProvider(create: (_) => AdProvider()),
       ],
       child: Stack(
         children: [
@@ -228,12 +248,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             body: IndexedStack(
               index: _currentIndex,
               children: [
-                // 0 — Dashboard
-                DashboardScreen(
-                  onGoToLearn: () => _goTo(1),
-                  onGoToStories: () => _goTo(2),
-                  onGoToFavorites: () => _goTo(3),
-                ),
+                // 0 — Módulos / Dashboard
+                _selectedModule == null
+                    ? ModuleSelectionScreen(
+                        onModuleSelected: (module) =>
+                            setState(() => _selectedModule = module),
+                      )
+                    : DashboardScreen(
+                        module: _selectedModule!,
+                        onGoToLearn: () => _goTo(1),
+                        onGoToStories: () => _goTo(2),
+                        onGoToFavorites: () => _goTo(3),
+                        onBack: () => setState(() => _selectedModule = null),
+                      ),
                 // 1 — Learn
                 const HomeScreen(),
                 // 2 — Stories
@@ -304,7 +331,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                                               Brightness.dark
                                           ? const Color(0xFF1C1C1E)
                                           : Colors.white,
-                                      fontSize: 10,
+                                      fontSize: 9.5,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     textAlign: TextAlign.center,

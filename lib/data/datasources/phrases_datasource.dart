@@ -107,6 +107,23 @@ import 'days/day97_datasource.dart';
 import 'days/day98_datasource.dart';
 import 'days/day99_datasource.dart';
 import 'days/day100_datasource.dart';
+import 'days/business_interviews_datasource.dart';
+import 'days/business_interviews_lesson3_datasource.dart';
+import 'days/business_interviews_lesson4_datasource.dart';
+import 'days/business_interviews_lesson5_datasource.dart';
+import 'days/business_interviews_lesson6_datasource.dart';
+import 'days/business_interviews_lesson7_datasource.dart';
+import 'days/business_interviews_lesson8_datasource.dart';
+import 'days/business_interviews_lesson9_datasource.dart';
+import 'days/business_interviews_lesson10_datasource.dart';
+import 'days/business_interviews_lesson11_datasource.dart';
+import 'days/business_interviews_lesson12_datasource.dart';
+import 'days/business_interviews_lesson13_datasource.dart';
+import 'days/business_interviews_lesson14_datasource.dart';
+import 'days/business_interviews_lesson15_datasource.dart';
+import 'days/business_interviews_lesson16_datasource.dart';
+import 'days/business_interviews_lesson17_datasource.dart';
+import 'days/business_interviews_lesson18_datasource.dart';
 
 abstract class PhrasesDataSource {
   List<CategoryModel> getCategories();
@@ -225,6 +242,23 @@ class PhrasesDataSourceImpl implements PhrasesDataSource {
     'Nivel 98': Day42DataSource.getPhrases(),
     'Nivel 99': Day95DataSource.getPhrases(),
     'Nivel 100': Day14DataSource.getPhrases(),
+    'Nivel 101': BusinessInterviewsDataSource.getPhrases(),
+    'Nivel 102': BusinessInterviewsLesson3DataSource.getPhrases(),
+    'Nivel 103': BusinessInterviewsLesson4DataSource.getPhrases(),
+    'Nivel 104': BusinessInterviewsLesson5DataSource.getPhrases(),
+    'Nivel 105': BusinessInterviewsLesson6DataSource.getPhrases(),
+    'Nivel 106': BusinessInterviewsLesson7DataSource.getPhrases(),
+    'Nivel 107': BusinessInterviewsLesson8DataSource.getPhrases(),
+    'Nivel 108': BusinessInterviewsLesson9DataSource.getPhrases(),
+    'Nivel 109': BusinessInterviewsLesson10DataSource.getPhrases(),
+    'Nivel 110': BusinessInterviewsLesson11DataSource.getPhrases(),
+    'Nivel 111': BusinessInterviewsLesson12DataSource.getPhrases(),
+    'Nivel 112': BusinessInterviewsLesson13DataSource.getPhrases(),
+    'Nivel 113': BusinessInterviewsLesson14DataSource.getPhrases(),
+    'Nivel 114': BusinessInterviewsLesson15DataSource.getPhrases(),
+    'Nivel 115': BusinessInterviewsLesson16DataSource.getPhrases(),
+    'Nivel 116': BusinessInterviewsLesson17DataSource.getPhrases(),
+    'Nivel 117': BusinessInterviewsLesson18DataSource.getPhrases(),
   };
 
   // Mapa de desafíos diarios
@@ -329,12 +363,29 @@ class PhrasesDataSourceImpl implements PhrasesDataSource {
     'Nivel 98': Day42DataSource.getDailyChallenge(),
     'Nivel 99': Day95DataSource.getDailyChallenge(),
     'Nivel 100': Day14DataSource.getDailyChallenge(),
+    'Nivel 101': BusinessInterviewsDataSource.getDailyChallenge(),
+    'Nivel 102': BusinessInterviewsLesson3DataSource.getDailyChallenge(),
+    'Nivel 103': BusinessInterviewsLesson4DataSource.getDailyChallenge(),
+    'Nivel 104': BusinessInterviewsLesson5DataSource.getDailyChallenge(),
+    'Nivel 105': BusinessInterviewsLesson6DataSource.getDailyChallenge(),
+    'Nivel 106': BusinessInterviewsLesson7DataSource.getDailyChallenge(),
+    'Nivel 107': BusinessInterviewsLesson8DataSource.getDailyChallenge(),
+    'Nivel 108': BusinessInterviewsLesson9DataSource.getDailyChallenge(),
+    'Nivel 109': BusinessInterviewsLesson10DataSource.getDailyChallenge(),
+    'Nivel 110': BusinessInterviewsLesson11DataSource.getDailyChallenge(),
+    'Nivel 111': BusinessInterviewsLesson12DataSource.getDailyChallenge(),
+    'Nivel 112': BusinessInterviewsLesson13DataSource.getDailyChallenge(),
+    'Nivel 113': BusinessInterviewsLesson14DataSource.getDailyChallenge(),
+    'Nivel 114': BusinessInterviewsLesson15DataSource.getDailyChallenge(),
+    'Nivel 115': BusinessInterviewsLesson16DataSource.getDailyChallenge(),
+    'Nivel 116': BusinessInterviewsLesson17DataSource.getDailyChallenge(),
+    'Nivel 117': BusinessInterviewsLesson18DataSource.getDailyChallenge(),
   };
 
   @override
   List<CategoryModel> getCategories() {
     // Generar 100 categorías dinámicamente
-    return List.generate(100, (index) {
+    return List.generate(117, (index) {
       final dayNumber = index + 1;
       IconData icon;
 
